@@ -18,21 +18,16 @@ package object oduration {
 
   implicit class FiniteDurationOps(val d: FiniteDuration) extends AnyVal {
 
-    private[this] def unit(d: FiniteDuration): TimeUnit = {
+    private[this] def timeUnit(d: FiniteDuration): TimeUnit = {
       TimeUnit
         .values()
         .reverse
-        .collectFirst({ case unit: TimeUnit if d.toUnit(unit) >= 1 => unit })
+        .find(d.toUnit(_) >= 1)
         .getOrElse(TimeUnit.values().head)
     }
 
     def pretty: String = {
-      val u = unit(d)
-      f"${d.toUnit(u)}%.1f ${u.name.toLowerCase}"
-    }
-
-    def prettyAbbr: String = {
-      val u = unit(d)
+      val u = timeUnit(d)
       f"${d.toUnit(u)}%.1f${abbr(u)}"
     }
 

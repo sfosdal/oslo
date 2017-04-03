@@ -4,30 +4,11 @@ import java.text.DecimalFormat
 
 import scala.annotation.tailrec
 
-package object olong {
+package object odouble {
 
   private[this] val DefaultPrettyFactor = 1000
 
-  implicit class LongOps(val n: Long) extends AnyVal {
-
-    @tailrec
-    private def fact(j: Long, result: Long = 1L): Long = if (j == 0) result else fact(j - 1, j * result)
-
-    def ! : Long = fact(n)
-
-    def choose(k: Long): Long = fact(n) / (fact(n - k) * fact(k))
-
-    def times(f: => Unit): Unit = {
-      @tailrec
-      def times(j: Long, f: => Unit): Unit = {
-        if (j > 0) {
-          f
-          times(j - 1, f)
-        }
-      }
-
-      times(n, f)
-    }
+  implicit class DoubleOps(val d: Double) extends AnyVal {
 
     def pretty(factor: Int): String = {
       val margin = 0.9D
@@ -46,7 +27,7 @@ package object olong {
         }
       }
 
-      pretty(n.toDouble, units)
+      pretty(d, units)
     }
 
     def pretty: String = pretty(DefaultPrettyFactor)

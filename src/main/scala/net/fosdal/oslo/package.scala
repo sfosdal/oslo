@@ -5,6 +5,7 @@ import net.fosdal.oslo.oduration._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
+import scala.io.Source.fromInputStream
 import scala.language.reflectiveCalls
 
 package object oslo {
@@ -20,6 +21,21 @@ package object oslo {
   def using[A, B](resource: A)(f: A => B)(implicit closer: A => Unit): B = {
     try f(resource)
     finally closer(resource)
+  }
+
+  def time[A](block: => A)(f: FiniteDuration => Unit): A = {
+    val start = System.nanoTime()
+    val a     = block
+    f((System.nanoTime() - start).nanos)
+    a
+  }
+
+  def fileContents(resource: String): String = {
+    // TODO convert to reading file as fall back if resource does not exist
+    Option(getClass.getResourceAsStream(s"/$resource")).map(fromInputStream) match {
+      case Some(source) => using(source)(_.buffered.mkString)
+      case _            => throw new Exception(s"resource not found: $resource")
+    }
   }
 
   def logElapsedTime[Result](logger: (String) => Unit)(block: => Result): Result = {
@@ -44,7 +60,7 @@ package object oslo {
     Future {
       logElapsedTime(logger) {
         while (!block) {
-          logger(s"retrying in ${config.delay.prettyAbbr}")
+          logger(s"retrying in ${config.delay.pretty}")
           sleep(config.delay)
         }
       }
