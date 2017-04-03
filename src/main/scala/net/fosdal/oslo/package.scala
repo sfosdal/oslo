@@ -51,7 +51,6 @@ package object oslo {
   def sleep(millis: Long): Unit = Thread.sleep(millis)
 
   implicit val DefaultConfiguration = UntilConfig(20.seconds, 5.seconds)
-  implicit val DefaultLogger        = (_: String) => {}
 
   def until(block: => Boolean)(implicit config: UntilConfig, ec: ExecutionContext): Future[Unit] = {
     sleep(config.initialDelay)
