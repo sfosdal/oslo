@@ -53,33 +53,17 @@ package object oslo {
   implicit val DefaultConfiguration = UntilConfig(20.seconds, 5.seconds)
   implicit val DefaultLogger        = (_: String) => {}
 
-  def until(block: => Boolean)(implicit config: UntilConfig,
-                               logger: (String) => Unit,
-                               ec: ExecutionContext): Future[Unit] = {
+  def until(block: => Boolean)(implicit config: UntilConfig, ec: ExecutionContext): Future[Unit] = {
     sleep(config.initialDelay)
     Future {
-      logElapsedTime(logger) {
-        while (!block) {
-          logger(s"retrying in ${config.delay.pretty}")
-          sleep(config.delay)
-        }
+      while (!block) {
+        sleep(config.delay)
       }
     }
   }
 
-  def until(config: UntilConfig)(block: => Boolean)(implicit logger: (String) => Unit,
-                                                    ec: ExecutionContext): Future[Unit] = {
-    until(block)(config, logger, ec)
-  }
-
-  def until(logger: (String) => Unit)(block: => Boolean)(implicit config: UntilConfig,
-                                                         ec: ExecutionContext): Future[Unit] = {
-    until(block)(config, logger, ec)
-  }
-
-  def until(config: UntilConfig)(logger: (String) => Unit)(block: => Boolean)(
-      implicit ec: ExecutionContext): Future[Unit] = {
-    until(block)(config, logger, ec)
+  def until(config: UntilConfig)(block: => Boolean)(implicit ec: ExecutionContext): Future[Unit] = {
+    until(block)(config, ec)
   }
 
 }
