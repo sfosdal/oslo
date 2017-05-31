@@ -12,7 +12,7 @@ package object oslo {
 
   // TODO use typeclasses for Closer and Logger
 
-  implicit def NoOpCloser[A](a: A): Unit = {}
+  implicit def NoOpCloser[A](a: A): Unit = { val _ = a }
 
   implicit def CloseCloser[A <: { def close(): Unit }](a: A): Unit = a.close()
 
@@ -23,10 +23,10 @@ package object oslo {
     finally closer(resource)
   }
 
-  def time[A](block: => A)(f: FiniteDuration => Unit): A = {
+  def time[A](block: => A)(f: (A, FiniteDuration) => Unit): A = {
     val start = System.nanoTime()
     val a     = block
-    f((System.nanoTime() - start).nanos)
+    f(a, (System.nanoTime() - start).nanos)
     a
   }
 
