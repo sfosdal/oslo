@@ -12,7 +12,7 @@ coverageFailOnMinimum := true
 
 coverageEnabled := true
 
-publishTo := Some(Resolver.file("file", new File(Path.userHome.absolutePath + "/Desktop/oslo-release")))
+publishTo := Some(Resolver.file("file", new File(Path.userHome.absolutePath + "/Desktop/oslo-release"))) // TODO finish the publishing
 
 crossScalaVersions := Seq("2.12.2", "2.11.11")
 
@@ -32,10 +32,6 @@ scalacOptions ++= Seq(
   "-deprecation",
   "-encoding", "UTF-8",
   "-feature",
-  "-language:existentials",
-  "-language:higherKinds",
-  "-language:implicitConversions",
-  "-language:postfixOps",
   "-unchecked",
   "-Xfatal-warnings",
   "-Xfuture",

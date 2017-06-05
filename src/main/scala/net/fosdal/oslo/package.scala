@@ -5,7 +5,7 @@ import net.fosdal.oslo.oduration._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
-import scala.language.reflectiveCalls
+import scala.language.{implicitConversions, reflectiveCalls}
 
 // scalastyle:off structural.type
 package object oslo {
