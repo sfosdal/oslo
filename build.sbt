@@ -6,9 +6,11 @@ scalaVersion := "2.12.2"
 
 fork := true
 
-coverageMinimum := 0
+coverageMinimum := 10
 
 coverageFailOnMinimum := true
+
+coverageEnabled := true
 
 publishTo := Some(Resolver.file("file", new File(Path.userHome.absolutePath + "/Desktop/oslo-release")))
 

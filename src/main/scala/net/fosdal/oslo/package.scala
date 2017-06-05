@@ -7,6 +7,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.reflectiveCalls
 
+// scalastyle:off structural.type
 package object oslo {
 
   implicit def NoOpCloser[A](a: A): Unit = {
