@@ -5,14 +5,13 @@ import net.fosdal.oslo.oduration._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
-import scala.io.Source.fromInputStream
 import scala.language.reflectiveCalls
 
 package object oslo {
 
-  // TODO use typeclasses for Closer and Logger
-
-  implicit def NoOpCloser[A](a: A): Unit = { val _ = a }
+  implicit def NoOpCloser[A](a: A): Unit = {
+    val _ = a
+  }
 
   implicit def CloseCloser[A <: { def close(): Unit }](a: A): Unit = a.close()
 
@@ -28,14 +27,6 @@ package object oslo {
     val a     = block
     f(a, (System.nanoTime() - start).nanos)
     a
-  }
-
-  def fileContents(resource: String): String = {
-    // TODO convert to reading file as fall back if resource does not exist
-    Option(getClass.getResourceAsStream(s"/$resource")).map(fromInputStream) match {
-      case Some(source) => using(source)(_.buffered.mkString)
-      case _            => throw new Exception(s"resource not found: $resource")
-    }
   }
 
   def logElapsedTime[Result](logger: (String) => Unit)(block: => Result): Result = {

@@ -1,8 +1,5 @@
 logLevel := Level.Warn
 
-resolvers += "JBoss" at "https://repository.jboss.org" // TODO see: https://github.com/sbt/sbt-assembly/issues/236
-
-addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.6.1")
 addSbtPlugin("com.geirsson" % "sbt-scalafmt" % "0.6.8")
 addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.4")
 addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.0.0")
