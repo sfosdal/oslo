@@ -30,6 +30,15 @@ package object oslo {
     a
   }
 
+  def logStatus[A](logger: String => Unit)(block: => A): A = logStatus("processing", logger)(block)
+
+  def logStatus[A](blockName: String, logger: String => Unit)(block: => A): A = {
+    logger(s"started $blockName")
+    time(block) {
+      case (_, duration) => logger(s"completed $blockName (${duration.pretty})")
+    }
+  }
+
   def logElapsedTime[Result](logger: (String) => Unit)(block: => Result): Result = {
     val start = System.nanoTime()
     block tap { (_: Result) =>

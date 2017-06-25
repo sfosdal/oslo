@@ -1,6 +1,5 @@
 package net.fosdal.oslo.ocsv
 
-
 import java.io.StringReader
 
 import com.opencsv.CSVReader
@@ -51,7 +50,7 @@ case class CsvParser()(implicit config: CsvParser.Config) extends LazyLogging {
       config.skipLines,
       config.strictQuotes,
       config.ignoreLeadingWhiteSpace
-    )
+  )
 
   def apply(content: String): Try[Seq[Seq[String]]] = Try {
     reader(content)
