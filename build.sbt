@@ -1,8 +1,10 @@
+import ReleaseTransformations._
+
 name := "oslo"
 
 organization := "net.fosdal"
 
-scalaVersion := "2.12.2"
+scalaVersion := "2.11.11"
 
 fork := true
 
@@ -12,9 +14,32 @@ coverageFailOnMinimum := true
 
 coverageEnabled := true
 
-publishTo := Some(Resolver.file("file", new File(Path.userHome.absolutePath + "/Desktop/oslo-release"))) // TODO finish the publishing
-
 crossScalaVersions := Seq("2.12.2", "2.11.11")
+
+publishArtifact in Test := false
+
+publishTo := Some(
+  if (isSnapshot.value) {
+    Opts.resolver.sonatypeSnapshots
+  } else {
+    Opts.resolver.sonatypeStaging
+  }
+)
+
+releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  setReleaseVersion,
+  commitReleaseVersion,
+  tagRelease,
+  ReleaseStep(action = Command.process("publishSigned", _), enableCrossBuild = true),
+  setNextVersion,
+  commitNextVersion,
+  ReleaseStep(action = Command.process("sonatypeReleaseAll", _), enableCrossBuild = true),
+  pushChanges
+)
 
 scalastyleFailOnError := true
 
