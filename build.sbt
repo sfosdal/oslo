@@ -46,11 +46,13 @@ scalastyleFailOnError := true
 (scalastyleConfig in Test) := baseDirectory.value / "scalastyle-test-config.xml"
 
 libraryDependencies ++= Seq(
-  "com.opencsv"                % "opencsv"        % "3.9",
+  "com.opencsv"                % "opencsv"        % "3.10",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
   "joda-time"                  % "joda-time"      % "2.9.9",
   "org.scalatest"              %% "scalatest"     % "3.0.3" % Test
 )
+
+dependencyUpdatesFilter -= moduleFilter(organization = "org.scala-lang")
 
 // format: off
 scalacOptions ++= Seq(
