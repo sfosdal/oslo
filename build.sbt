@@ -47,7 +47,7 @@ scalastyleFailOnError := true
 
 libraryDependencies ++= Seq(
   "com.opencsv"                % "opencsv"        % "3.10",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0", // TODO upgrade when resolved: https://github.com/typesafehub/scala-logging/issues/89
   "joda-time"                  % "joda-time"      % "2.9.9",
   "org.scalatest"              %% "scalatest"     % "3.0.3" % Test
 )
