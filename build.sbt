@@ -8,12 +8,6 @@ scalaVersion := "2.11.11"
 
 fork := true
 
-coverageMinimum := 10
-
-coverageFailOnMinimum := true
-
-coverageEnabled := true
-
 crossScalaVersions := Seq("2.12.2", "2.11.11")
 
 publishArtifact in Test := false
@@ -46,11 +40,13 @@ scalastyleFailOnError := true
 (scalastyleConfig in Test) := baseDirectory.value / "scalastyle-test-config.xml"
 
 libraryDependencies ++= Seq(
-  "com.opencsv"                % "opencsv"        % "3.9",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
+  "com.opencsv"                % "opencsv"        % "3.10",
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0", // TODO upgrade when resolved: https://github.com/typesafehub/scala-logging/issues/89
   "joda-time"                  % "joda-time"      % "2.9.9",
   "org.scalatest"              %% "scalatest"     % "3.0.3" % Test
 )
+
+dependencyUpdatesFilter -= moduleFilter(organization = "org.scala-lang")
 
 // format: off
 scalacOptions ++= Seq(
