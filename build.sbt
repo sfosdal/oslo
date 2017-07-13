@@ -8,12 +8,6 @@ scalaVersion := "2.11.11"
 
 fork := true
 
-coverageMinimum := 10
-
-coverageFailOnMinimum := true
-
-coverageEnabled := true
-
 crossScalaVersions := Seq("2.12.2", "2.11.11")
 
 publishArtifact in Test := false
