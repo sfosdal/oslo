@@ -2,6 +2,7 @@ package net.fosdal.oslo
 
 import java.util.concurrent.TimeUnit
 
+import scala.concurrent.duration.Duration._
 import scala.concurrent.duration._
 
 package object oduration {
@@ -16,20 +17,31 @@ package object oduration {
     DAYS         -> "d"
   )
 
-  implicit class FiniteDurationOps(val d: FiniteDuration) extends AnyVal {
-
-    private[this] def timeUnit(d: FiniteDuration): TimeUnit = {
-      TimeUnit
-        .values()
-        .reverse
-        .find(d.toUnit(_) >= 1)
-        .getOrElse(TimeUnit.values().head)
+  private[this] def format(duration: Duration, precision: Int): String = {
+    duration match {
+      case d: Duration if d == Zero     => "0ms"
+      case d: Duration if d == Inf      => "Infinity"
+      case d: Duration if d == MinusInf => "-Infinity"
+      case d: FiniteDuration =>
+        val u = timeUnit(d)
+        s"${d.toUnit(u).formatted(s"%.${precision}f")}${abbr(u)}"
+      case _: Duration => "Undefined"
     }
+  }
 
-    def pretty: String = {
-      val u = timeUnit(d)
-      f"${d.toUnit(u)}%.1f${abbr(u)}"
-    }
+  private[this] def timeUnit(d: Duration): TimeUnit = {
+    TimeUnit
+      .values()
+      .reverse
+      .find(d.toUnit(_) >= 1)
+      .getOrElse(TimeUnit.values().head)
+  }
+
+  implicit class DurationOps(val d: Duration) extends AnyVal {
+
+    def pretty: String = pretty()
+
+    def pretty(precision: Int = 1): String = format(d, precision)
 
   }
 
