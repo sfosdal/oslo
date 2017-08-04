@@ -1,10 +1,9 @@
 package net.fosdal.oslo.oduration
 
-import org.scalacheck.Gen._
+import net.fosdal.oslo.testutil._
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.{Matchers, WordSpec}
 
-import scala.Long.{MaxValue, MinValue}
 import scala.concurrent.duration.Duration._
 import scala.concurrent.duration._
 
@@ -52,15 +51,13 @@ class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
       1001.milliseconds.pretty(2) shouldBe "1.00s"
       1055.milliseconds.pretty(2) shouldBe "1.06s"
     }
+    "format some typical seconds" in {
+      2.seconds.pretty(0)   shouldBe "2s"
+      61.seconds.pretty(0)  shouldBe "1m"
+      63.seconds.pretty(0)  shouldBe "1m"
+      119.seconds.pretty(0) shouldBe "2m"
+    }
   }
-
-  val genDuration = frequency(
-    1 -> const(Inf),
-    1 -> const(MinusInf),
-    1 -> const(Undefined),
-    1 -> const(Zero),
-    6 -> chooseNum(MinValue + 1, MaxValue).map(fromNanos)
-  )
 
   "pretty with precision 1" must {
     "pretty with default precision" in {
