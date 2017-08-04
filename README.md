@@ -10,22 +10,22 @@ Oslo is a tiny library of small but hopefully useful things.
 
 ## User Guide
 
-####oslo
+#### oslo
 TBD
 
-####oany
+#### oany
 TBD
 
-####ocsv
+#### ocsv
 TBD
 
-####odatetime
+#### odatetime
 TBD
 
-####odouble
+#### odouble
 TBD
 
-####oduration
+#### oduration
 pretty: converts Duration into pretty string.
 
 ```scala
@@ -59,20 +59,20 @@ res1: String = 6h
 res2: String = 409.171d
 ```
 
-####ofile
+#### ofile
 TBD
 
-####oint
+#### oint
 TBD
 
-####olong
+#### olong
 TBD
 
-####oordering
+#### oordering
 TBD
 
-####oseq
+#### oseq
 TBD
 
-####ostring
+#### ostring
 TBD
