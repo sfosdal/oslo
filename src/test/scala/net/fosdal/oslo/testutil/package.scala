@@ -15,4 +15,6 @@ package object testutil {
     6 -> chooseNum(MinValue + 1, MaxValue).map(fromNanos)
   )
 
+  implicit val genFiniteDuration = chooseNum(MinValue + 1, MaxValue).map(fromNanos)
+
 }
