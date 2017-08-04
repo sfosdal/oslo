@@ -19,13 +19,13 @@ package object oduration {
 
   private[this] def format(duration: Duration, precision: Int): String = {
     duration match {
-      case d: Duration if d == Zero => "0ms"
+      case d: Duration if d == Zero     => "0ms"
+      case d: Duration if d == Inf      => "Infinity"
+      case d: Duration if d == MinusInf => "-Infinity"
       case d: FiniteDuration =>
         val u = timeUnit(d)
         s"${d.toUnit(u).formatted(s"%.${precision}f")}${abbr(u)}"
-      case d: Duration if d == Inf      => "Infinity"
-      case d: Duration if d == MinusInf => "-Infinity"
-      case _: Duration                  => "Undefined"
+      case _: Duration => "Undefined"
     }
   }
 
