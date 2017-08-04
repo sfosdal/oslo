@@ -6,6 +6,10 @@ import scala.concurrent.duration._
 
 package object oduration {
 
+  // FIXME change oslo to work on Durations rather than FiniteDurations
+  // FIXME change oslo to allow an optional precision to be supplied
+  // FIXME change oslo to allow an optional format to be supplied
+
   private[this] val abbr = Map(
     NANOSECONDS  -> "ns",
     MICROSECONDS -> "µs",
