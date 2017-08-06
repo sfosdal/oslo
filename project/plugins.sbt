@@ -1,8 +1,8 @@
 logLevel := Level.Warn
 
-addSbtPlugin("com.lucidchart" % "sbt-scalafmt" % "1.10")
 addSbtPlugin("com.github.gseitz" % "sbt-release" % "1.0.5")
 addSbtPlugin("com.jsuereth" % "sbt-pgp" % "1.0.1")
+addSbtPlugin("com.lucidchart" % "sbt-scalafmt" % "1.10")
 addSbtPlugin("com.thoughtworks.sbt-api-mappings" % "sbt-api-mappings" % "1.1.0")
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.3.1")
 addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.9.3")
