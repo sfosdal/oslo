@@ -1,4 +1,5 @@
 # Oslo
+[![CircleCI](https://circleci.com/gh/sfosdal/oslo.svg?style=shield)](https://circleci.com/gh/sfosdal/oslo)
 
 ### Overview
 Oslo is a tiny library of small but hopefully useful things.
