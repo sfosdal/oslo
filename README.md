@@ -1,5 +1,6 @@
 # Oslo
 [![CircleCI](https://circleci.com/gh/sfosdal/oslo.svg?style=shield)](https://circleci.com/gh/sfosdal/oslo)
+[![Coverage Status](https://coveralls.io/repos/github/sfosdal/oslo/badge.svg?branch=master)](https://coveralls.io/github/sfosdal/oslo?branch=master)
 
 ### Overview
 Oslo is a tiny library of small but hopefully useful things.
