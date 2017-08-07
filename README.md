@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/sfosdal/oslo.png?label=ready&title=Ready)](https://waffle.io/sfosdal/oslo?utm_source=badge)
 # Oslo
 [![CircleCI](https://circleci.com/gh/sfosdal/oslo.svg?style=shield)](https://circleci.com/gh/sfosdal/oslo)
 [![Coverage Status](https://coveralls.io/repos/github/sfosdal/oslo/badge.svg?branch=master)](https://coveralls.io/github/sfosdal/oslo?branch=master)
