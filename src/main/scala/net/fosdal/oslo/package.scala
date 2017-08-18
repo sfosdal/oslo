@@ -1,22 +1,17 @@
 package net.fosdal
 
+import net.fosdal.oslo.PollingConfig
 import net.fosdal.oslo.oduration._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.{implicitConversions, reflectiveCalls}
 
-// TODO use implicit trick for PollingConfig
 // TODO create project page
-// TODO add CHANGES.md
-// TODO integrate with coveralls via circleci
-// TODO consider adding isIntable, isDoubleable, isBigDecable
-// TODO f.minBy(_.duration).duration
-// TODO Map[Option[A],_] => Map[A,_] with defaultValue
-// TODO duration shouldBe 2.seconds +- 1.second
+// TODO resolve CircleCI failures
 
 // scalastyle:off structural.type
-package object oslo {
+package object oslo extends Oslo {
 
   implicit def NoOpCloser[A](a: A): Unit = {
     val _ = a
@@ -65,14 +60,12 @@ package object oslo {
     }
   }
 
-  def sleep(millis: Short): Unit = sleep(millis.milliseconds)
+  def sleep(millis: Short): Unit = sleep(millis.toInt.milliseconds)
   def sleep(millis: Int): Unit   = sleep(millis.milliseconds)
   def sleep(millis: Long): Unit  = sleep(millis.milliseconds)
 
-  val DefaultPollingConfig: PollingConfig = PollingConfig(1.second, 1.second)
-
-  def pollingUntil(block: => Boolean)(implicit ec: ExecutionContext): Future[Unit] = {
-    pollingUntil(DefaultPollingConfig)(block)
+  def pollingUntil(block: => Boolean)(implicit config: PollingConfig, ec: ExecutionContext): Future[Unit] = {
+    pollingUntil(config)(block)
   }
 
   def pollingUntil(pollingConfig: PollingConfig)(block: => Boolean)(implicit ec: ExecutionContext): Future[Unit] = {
@@ -88,4 +81,8 @@ package object oslo {
     pollingUntil(pollingConfig)(block)
   }
 
+}
+
+trait Oslo {
+  implicit val DefaultPollingConfig: PollingConfig = PollingConfig(1.second, 1.second)
 }

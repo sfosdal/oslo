@@ -14,11 +14,6 @@ package object oany {
       a
     }
 
-    // TODO clean-up the ordering stuff
-    def in(min: A, max: A)(implicit ord: Ordering[A]): Boolean = {
-      ord.gteq(a, min) && ord.lteq(a, max)
-    }
-
   }
 
 }

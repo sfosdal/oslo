@@ -1,4 +1,4 @@
-import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
+import ReleaseTransformations._
 
 name := "oslo"
 
@@ -49,7 +49,7 @@ libraryDependencies ++= Seq(
 
 dependencyUpdatesFilter -= moduleFilter(organization = "org.scala-lang")
 
-scalacOptions in Test := Seq(
+scalacOptions ++= Seq(
   "-deprecation",
   "-encoding",
   "UTF-8",
@@ -64,4 +64,4 @@ scalacOptions in Test := Seq(
   "-Ywarn-unused"
 )
 
-scalacOptions in Compile := (scalacOptions in Compile).value :+ "-Ywarn-value-discard"
+scalacOptions in (Compile, doc) ++= Seq("-Ywarn-value-discard")

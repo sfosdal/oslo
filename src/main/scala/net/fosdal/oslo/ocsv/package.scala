@@ -80,14 +80,14 @@ package object ocsv extends Ocsv with LazyLogging {
       .collect {
         case line if !removeEmptyRecords || line.length > 1 || line.head.nonEmpty =>
           line.toSeq
-      } tap { (lines: Seq[Seq[String]]) =>
-      if (strictRecordLength) {
-        // TODO find more performant solution
-        val counts = lines.groupBy(_.length).keys
-        if (counts.size > 1) {
-          throw new IllegalArgumentException(s"found records with varying field count: $counts")
+      } partialTap {
+      case lines: Seq[Seq[String]] if lines.nonEmpty =>
+        if (strictRecordLength) {
+          val len = lines.head.length
+          if (lines.tail.exists(_.length != len)) {
+            throw new IllegalArgumentException(s"found records with varying field count")
+          }
         }
-      }
     }
   }
 
