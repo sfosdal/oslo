@@ -1,7 +1,6 @@
 package net.fosdal.oslo
 
 import net.fosdal.oslo.util.OsloMatchers
-import org.scalacheck.Gen
 import org.scalacheck.Gen.alphaNumStr
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.{Matchers, WordSpec}
@@ -151,7 +150,7 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks with OsloMatch
       val mutable = new UntilMutable(limit)
 
       mutable.i shouldBe 0
-      val myFuture: Future[Unit] = pollingUntil {
+      val myFuture: Future[Unit] = pollUntil {
         mutable.check()
       }
       mutable.i shouldBe 0
@@ -165,9 +164,9 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks with OsloMatch
 
       mutable.i shouldBe 0
 
-      val config = PollingConfig(initialDelay = 0.seconds, pollingInterval = 1.second)
+      val config = PollUntilConfig(initialDelay = 0.seconds, pollingInterval = 1.second)
 
-      val myFuture: Future[Unit] = pollingUntil(config) {
+      val myFuture: Future[Unit] = pollUntil(config) {
         mutable.check()
       }
       sleep(1.second)
@@ -182,7 +181,7 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks with OsloMatch
 
       mutable.i shouldBe 0
 
-      val myFuture: Future[Unit] = pollingUntil(initialDelay = 0.seconds, pollingInterval = 1.second) {
+      val myFuture: Future[Unit] = pollUntil(initialDelay = 0.seconds, pollingInterval = 1.second) {
         mutable.check()
       }
       sleep(1.second)

@@ -1,6 +1,6 @@
 package net.fosdal
 
-import net.fosdal.oslo.PollingConfig
+import net.fosdal.oslo.PollUntilConfig
 import net.fosdal.oslo.oduration._
 
 import scala.concurrent.duration._
@@ -15,8 +15,7 @@ package object oslo extends Oslo {
   }
 
   implicit def CloseCloser[A <: { def close(): Unit }](a: A): Unit = a.close()
-
-  implicit def StopCloser[A <: { def stop(): Unit }](a: A): Unit = a.stop()
+  implicit def StopCloser[A <: { def stop(): Unit }](a: A): Unit   = a.stop()
 
   def using[A, B](resource: A)(f: A => B)(implicit closer: A => Unit): B = {
     try f(resource)
@@ -58,28 +57,30 @@ package object oslo extends Oslo {
   }
 
   def sleep(millis: Short): Unit = sleep(millis.toInt.milliseconds)
-  def sleep(millis: Int): Unit   = sleep(millis.milliseconds)
-  def sleep(millis: Long): Unit  = sleep(millis.milliseconds)
 
-  def pollingUntil(block: => Boolean)(implicit config: PollingConfig, ec: ExecutionContext): Future[Unit] = {
-    pollingUntil(config)(block)
+  def sleep(millis: Int): Unit = sleep(millis.milliseconds)
+
+  def sleep(millis: Long): Unit = sleep(millis.milliseconds)
+
+  def pollUntil(block: => Boolean)(implicit config: PollUntilConfig, ec: ExecutionContext): Future[Unit] = {
+    pollUntil(config)(block)
   }
 
-  def pollingUntil(pollingConfig: PollingConfig)(block: => Boolean)(implicit ec: ExecutionContext): Future[Unit] = {
+  def pollUntil(config: PollUntilConfig)(block: => Boolean)(implicit ec: ExecutionContext): Future[Unit] = {
     Future {
-      sleep(pollingConfig.initialDelay)
-      while (!block) sleep(pollingConfig.pollingInterval)
+      sleep(config.initialDelay)
+      while (!block) sleep(config.pollingInterval)
     }
   }
 
-  def pollingUntil(initialDelay: FiniteDuration = 1.second, pollingInterval: FiniteDuration = 1.second)(
-      block: => Boolean)(implicit ec: ExecutionContext): Future[Unit] = {
-    val pollingConfig = PollingConfig(initialDelay, pollingInterval)
-    pollingUntil(pollingConfig)(block)
+  def pollUntil(initialDelay: FiniteDuration = 1.second, pollingInterval: FiniteDuration = 1.second)(block: => Boolean)(
+      implicit ec: ExecutionContext): Future[Unit] = {
+    val config = PollUntilConfig(initialDelay, pollingInterval)
+    pollUntil(config)(block)
   }
 
 }
 
 trait Oslo {
-  implicit val DefaultPollingConfig: PollingConfig = PollingConfig(1.second, 1.second)
+  implicit val DefaultPollUntilConfig: PollUntilConfig = PollUntilConfig(1.second, 1.second)
 }
