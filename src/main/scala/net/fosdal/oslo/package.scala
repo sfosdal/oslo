@@ -15,7 +15,8 @@ package object oslo extends Oslo {
   }
 
   implicit def CloseCloser[A <: { def close(): Unit }](a: A): Unit = a.close()
-  implicit def StopCloser[A <: { def stop(): Unit }](a: A): Unit   = a.stop()
+
+  implicit def StopCloser[A <: { def stop(): Unit }](a: A): Unit = a.stop()
 
   def using[A, B](resource: A)(f: A => B)(implicit closer: A => Unit): B = {
     try f(resource)
@@ -47,7 +48,6 @@ package object oslo extends Oslo {
     }
   }
 
-  // change to FiniteDuration
   def sleep(duration: FiniteDuration): Unit = {
     if (duration.toMillis >= 0) {
       Thread.sleep(duration.toMillis)
