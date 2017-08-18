@@ -1,17 +1,24 @@
 # Oslo
+[![Maven Central](https://img.shields.io/maven-central/v/net.fosdal/oslo_2.11.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.fosdal%22%20AND%20a%3A%22oslo_2.11%22)
 [![CircleCI](https://circleci.com/gh/sfosdal/oslo.svg?style=shield)](https://circleci.com/gh/sfosdal/oslo)
 [![Coverage Status](https://coveralls.io/repos/github/sfosdal/oslo/badge.svg?branch=master)](https://coveralls.io/github/sfosdal/oslo?branch=master)
-[![Maven Central](https://img.shields.io/maven-central/v/net.fosdal/oslo_2.11.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.fosdal%22%20AND%20a%3A%22oslo_2.11%22)
 
 ### Overview
-Oslo is a tiny library of small but hopefully useful things.
+Oslo is a tiny Scala library of small but hopefully useful things.
 
-### Why would I do this?
-* I've had to write these over and over again, I want to stop repeating myself.
-* So that others may benefit from the effort of olso
-* So that others may lend their efforts to improve olso
+### Getting Started
+Oslo is currently available for Scala 2.11. 2.12 support is comming soon.
 
-## User Guide
+To get started with SBT, simply add the following to your `build.sbt`
+file:
+
+```scala
+libraryDependencies += "net.fosdal" %% "oslo" % "0.2.1"
+```
+
+Release notes for Oslo are available in [CHANGES.md](CHANGES.md).
+
+### User Guide
 
 #### oslo
 TBD
