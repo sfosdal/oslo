@@ -26,7 +26,6 @@ package object onumber {
       if (k > n) {
         0L
       } else {
-        // TODO known issue, this does not work for high values
         n.factorial / ((n - k).factorial * k.factorial)
       }
     }

@@ -7,9 +7,6 @@ import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.{implicitConversions, reflectiveCalls}
 
-// TODO create project page
-// TODO resolve CircleCI failures
-
 // scalastyle:off structural.type
 package object oslo extends Oslo {
 
