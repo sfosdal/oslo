@@ -24,20 +24,31 @@ Release notes for Oslo are available in [CHANGES.md](CHANGES.md).
 ### User Guide
 Most of Oslo is organized around package objects. In general, this means you need to import the package object and the methods are then available for use. Here is a list of the package objects and examples on using them:
 
-#### oslo
+#### net.fosdal.oslo._
 TBD
 
-#### oany
+#### net.fosdal.oslo.ocsv._
 TBD
 
-#### ocsv
+#### net.fosdal.oslo.odatetime._
 TBD
 
-#### odatetime
+#### net.fosdal.oslo.oduration._
 TBD
 
-#### odouble
+#### net.fosdal.oslo.ofile._
 TBD
+
+#### net.fosdal.oslo.onumber._
+TBD
+
+#### net.fosdal.oslo.oordering._
+TBD
+
+#### net.fosdal.oslo.oseq._
+TBD
+
+#### net.fosdal.oslo.ostring._
 
 #### oduration
 pretty: converts Duration into pretty string.
@@ -72,21 +83,3 @@ res0: String = 1.1h
 res1: String = 6h
 res2: String = 409.171d
 ```
-
-#### ofile
-TBD
-
-#### oint
-TBD
-
-#### olong
-TBD
-
-#### oordering
-TBD
-
-#### oseq
-TBD
-
-#### ostring
-TBD
