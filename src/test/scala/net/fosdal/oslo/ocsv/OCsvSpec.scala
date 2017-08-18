@@ -106,7 +106,7 @@ class OCsvSpec extends WordSpec with Matchers with PropertyChecks {
   "parseFilesInDir" must {
 
     "parse the files in a directory" in {
-      parseFilesInDir("src/test/resources/OCsvSpec/dir") shouldBe Seq(Seq("1", "2", "3"), Seq("4", "5", "6"))
+      parseFilesInDir("src/test/resources/OCsvSpec/dir") should contain theSameElementsAs Seq(Seq("1", "2", "3"), Seq("4", "5", "6"))
     }
 
     "parse the files in a directory, recursively" in {
