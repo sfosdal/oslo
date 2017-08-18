@@ -3,7 +3,7 @@ package net.fosdal.oslo.ostring
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen._
 import org.scalatest.prop.PropertyChecks
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{Ignore, Matchers, WordSpec}
 
 class OStringSpec extends WordSpec with Matchers with PropertyChecks {
 

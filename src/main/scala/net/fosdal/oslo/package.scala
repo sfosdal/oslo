@@ -1,6 +1,6 @@
 package net.fosdal
 
-import net.fosdal.oslo.oany._
+import net.fosdal.oslo.PollUntilConfig
 import net.fosdal.oslo.oduration._
 
 import scala.concurrent.duration._
@@ -8,7 +8,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.language.{implicitConversions, reflectiveCalls}
 
 // scalastyle:off structural.type
-package object oslo {
+package object oslo extends Oslo {
 
   implicit def NoOpCloser[A](a: A): Unit = {
     val _ = a
@@ -30,7 +30,9 @@ package object oslo {
     a
   }
 
-  def logStatus[A](logger: String => Unit)(block: => A): A = logStatus("processing", logger)(block)
+  def logStatus[A](logger: String => Unit)(block: => A): A = {
+    logStatus("processing", logger)(block)
+  }
 
   def logStatus[A](blockName: String, logger: String => Unit)(block: => A): A = {
     logger(s"started $blockName")
@@ -40,30 +42,45 @@ package object oslo {
   }
 
   def logElapsedTime[Result](logger: (String) => Unit)(block: => Result): Result = {
-    val start = System.nanoTime()
-    block tap { (_: Result) =>
-      val delta = (System.nanoTime() - start).nanoseconds
-      logger(s"elapsed time: ${delta.pretty}")
+    time(block) {
+      case (_, duration) =>
+        logger(s"elapsed time: ${duration.pretty}")
     }
   }
 
-  def sleep(duration: FiniteDuration): Unit = sleep(duration.toMillis)
+  def sleep(duration: FiniteDuration): Unit = {
+    if (duration.toMillis >= 0) {
+      Thread.sleep(duration.toMillis)
+    } else {
+      throw new IllegalArgumentException("duration must be non-negative")
+    }
+  }
 
-  def sleep(millis: Long): Unit = Thread.sleep(millis)
+  def sleep(millis: Short): Unit = sleep(millis.toInt.milliseconds)
 
-  implicit val DefaultConfiguration = UntilConfig(20.seconds, 5.seconds)
+  def sleep(millis: Int): Unit = sleep(millis.milliseconds)
 
-  def until(block: => Boolean)(implicit config: UntilConfig, ec: ExecutionContext): Future[Unit] = {
-    sleep(config.initialDelay)
+  def sleep(millis: Long): Unit = sleep(millis.milliseconds)
+
+  def pollUntil(block: => Boolean)(implicit config: PollUntilConfig, ec: ExecutionContext): Future[Unit] = {
+    pollUntil(config)(block)
+  }
+
+  def pollUntil(config: PollUntilConfig)(block: => Boolean)(implicit ec: ExecutionContext): Future[Unit] = {
     Future {
-      while (!block) {
-        sleep(config.delay)
-      }
+      sleep(config.initialDelay)
+      while (!block) sleep(config.pollingInterval)
     }
   }
 
-  def until(config: UntilConfig)(block: => Boolean)(implicit ec: ExecutionContext): Future[Unit] = {
-    until(block)(config, ec)
+  def pollUntil(initialDelay: FiniteDuration = 1.second, pollingInterval: FiniteDuration = 1.second)(block: => Boolean)(
+      implicit ec: ExecutionContext): Future[Unit] = {
+    val config = PollUntilConfig(initialDelay, pollingInterval)
+    pollUntil(config)(block)
   }
 
+}
+
+trait Oslo {
+  implicit val DefaultPollUntilConfig: PollUntilConfig = PollUntilConfig(1.second, 1.second)
 }

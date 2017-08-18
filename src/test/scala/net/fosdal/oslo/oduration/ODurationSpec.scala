@@ -1,40 +1,64 @@
 package net.fosdal.oslo.oduration
 
-import net.fosdal.oslo.testutil._
+import net.fosdal.oslo.util._
 import org.scalatest.prop.PropertyChecks
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{Ignore, Matchers, WordSpec}
 
 import scala.concurrent.duration.Duration._
 import scala.concurrent.duration._
 
+// scalastyle:off magic.number
 class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
 
+  "abs" must {
+    "return the absolute value of the duration" in {
+      2.days.abs    shouldBe 2.days
+      -2.days.abs   shouldBe 2.days
+      Zero.abs      shouldBe 0.days
+      Inf.abs       shouldBe MinusInf
+      MinusInf.abs  shouldBe Inf
+      Undefined.abs shouldBe Undefined
+    }
+  }
+
   "pretty" must {
+    "format some typical nanoseconds" in {
+      (-200).nanoseconds.pretty shouldBe "-200.0ns"
+      2.nanoseconds.pretty      shouldBe "2.0ns"
+      999.nanoseconds.pretty    shouldBe "999.0ns"
+      1001.nanoseconds.pretty   shouldBe "1.0µs"
+      1050.nanoseconds.pretty   shouldBe "1.1µs"
+    }
     "format some typical milliseconds" in {
-      2.milliseconds.pretty    shouldBe "2.0ms"
-      999.milliseconds.pretty  shouldBe "999.0ms"
-      1001.milliseconds.pretty shouldBe "1.0s"
-      1050.milliseconds.pretty shouldBe "1.1s"
+      (-200).milliseconds.pretty shouldBe "-200.0ms"
+      2.milliseconds.pretty      shouldBe "2.0ms"
+      999.milliseconds.pretty    shouldBe "999.0ms"
+      1001.milliseconds.pretty   shouldBe "1.0s"
+      1050.milliseconds.pretty   shouldBe "1.1s"
     }
     "format some typical seconds" in {
-      2.seconds.pretty  shouldBe "2.0s"
-      61.seconds.pretty shouldBe "1.0m"
-      63.seconds.pretty shouldBe "1.1m"
+      (-200).seconds.pretty shouldBe "-3.3m"
+      2.seconds.pretty      shouldBe "2.0s"
+      61.seconds.pretty     shouldBe "1.0m"
+      63.seconds.pretty     shouldBe "1.1m"
     }
     "format some typical minutes" in {
-      2.minutes.pretty  shouldBe "2.0m"
-      61.minutes.pretty shouldBe "1.0h"
-      63.minutes.pretty shouldBe "1.1h"
+      (-200).minutes.pretty shouldBe "-3.3h"
+      2.minutes.pretty      shouldBe "2.0m"
+      61.minutes.pretty     shouldBe "1.0h"
+      63.minutes.pretty     shouldBe "1.1h"
     }
     "format some typical hours" in {
-      2.hours.pretty  shouldBe "2.0h"
-      25.hours.pretty shouldBe "1.0d"
-      26.hours.pretty shouldBe "1.1d"
+      (-200).hours.pretty shouldBe "-8.3d"
+      2.hours.pretty      shouldBe "2.0h"
+      25.hours.pretty     shouldBe "1.0d"
+      26.hours.pretty     shouldBe "1.1d"
     }
     "format some typical days" in {
-      2.days.pretty  shouldBe "2.0d"
-      25.days.pretty shouldBe "25.0d"
-      56.days.pretty shouldBe "56.0d"
+      (-200).days.pretty shouldBe "-200.0d"
+      2.days.pretty      shouldBe "2.0d"
+      25.days.pretty     shouldBe "25.0d"
+      56.days.pretty     shouldBe "56.0d"
     }
     "format some special durations" in {
       Zero.pretty      shouldBe "0ms"
