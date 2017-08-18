@@ -1,4 +1,4 @@
-import ReleaseTransformations._
+import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
 name := "oslo"
 
@@ -40,7 +40,7 @@ scalastyleFailOnError := true
 (scalastyleConfig in Test) := baseDirectory.value / "scalastyle-test-config.xml"
 
 libraryDependencies ++= Seq(
-  "com.opencsv"                % "opencsv"        % "3.10",
+  "com.opencsv"                % "opencsv"        % "4.0",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",
   "joda-time"                  % "joda-time"      % "2.9.9",
   "org.scalacheck"             %% "scalacheck"    % "1.13.5" % Test,
@@ -49,10 +49,10 @@ libraryDependencies ++= Seq(
 
 dependencyUpdatesFilter -= moduleFilter(organization = "org.scala-lang")
 
-// format: off
-scalacOptions ++= Seq(
+scalacOptions in Test := Seq(
   "-deprecation",
-  "-encoding", "UTF-8",
+  "-encoding",
+  "UTF-8",
   "-feature",
   "-unchecked",
   "-Xfatal-warnings",
@@ -61,6 +61,7 @@ scalacOptions ++= Seq(
   "-Yno-adapted-args",
   "-Ywarn-dead-code",
   "-Ywarn-numeric-widen",
-  "-Ywarn-unused",
-  "-Ywarn-value-discard"
+  "-Ywarn-unused"
 )
+
+scalacOptions in Compile := (scalacOptions in Compile).value :+ "-Ywarn-value-discard"

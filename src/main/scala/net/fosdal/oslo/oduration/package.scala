@@ -29,17 +29,27 @@ package object oduration {
     }
   }
 
-  private[this] def timeUnit(d: Duration): TimeUnit = {
+  private[this] def timeUnit(d: FiniteDuration): TimeUnit = {
     TimeUnit
       .values()
       .reverse
-      .find(d.toUnit(_) >= 1)
-      .getOrElse(TimeUnit.values().head)
+      .find(d.abs.toUnit(_) >= 1)
+      .get // given the definition of a FiniteDuration this is safe
   }
 
   implicit class DurationOps(val d: Duration) extends AnyVal {
 
     def pretty: String = pretty()
+
+    def abs: Duration = {
+      d match {
+        case d1: Duration if d1 == Inf            => MinusInf
+        case d1: Duration if d1 == MinusInf       => Inf
+        case d1: FiniteDuration if d1.toNanos < 0 => -d1
+        case d1: FiniteDuration                   => d1
+        case _                                    => Undefined
+      }
+    }
 
     def pretty(precision: Int = 1): String = format(d, precision)
 
