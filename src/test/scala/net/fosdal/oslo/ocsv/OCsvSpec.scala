@@ -30,7 +30,7 @@ class OCsvSpec extends WordSpec with Matchers with PropertyChecks {
     "parse contents consisting of multiple records" in new Fixture {
       val contents = Seq.fill(5)(Seq(simpleLine, mixedQuoteLine)).flatten.mkString("\n")
       val expected = Seq.fill(5)(Seq(simpleLineExpected, mixedQuoteLineExpected)).flatten
-      parseContents(contents) shouldBe expected
+      parseContents(contents)                shouldBe expected
       parseContents(contents, skipLines = 2) shouldBe expected.drop(2)
     }
 
@@ -93,7 +93,7 @@ class OCsvSpec extends WordSpec with Matchers with PropertyChecks {
     "throw an exception if the files have varying record lengths" in {
       an[IllegalArgumentException] should be thrownBy {
         parseFiles("src/test/resources/OCsvSpec/non-empty-file.csv",
-          "src/test/resources/OCsvSpec/other-non-empty-file.csv")
+                   "src/test/resources/OCsvSpec/other-non-empty-file.csv")
       }
     }
 
@@ -119,9 +119,9 @@ class OCsvSpec extends WordSpec with Matchers with PropertyChecks {
         Seq(Seq("1", "2", "3"), Seq("4", "5", "6"))
     }
 
-//    "parse the files in an empty directory" in {
-//      parseFilesInDir("src/test/resources/OCsvSpec/dir/empty-dir") shouldBe 'empty
-//    }
+    "parse the files in an empty directory" in {
+      parseFilesInDir("src/test/resources/OCsvSpec/dir/empty-dir") shouldBe 'empty
+    }
 
     "throw exception when directory does not exist" in {
       an[FileNotFoundException] should be thrownBy {
