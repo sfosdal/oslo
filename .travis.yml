@@ -1,0 +1,16 @@
+language: scala
+scala:
+   - 2.11.11
+jdk:
+  - oraclejdk7
+  - oraclejdk8
+cache:
+  directories:
+  - $HOME/.ivy2/cache
+  - $HOME/.sbt/launchers
+sbt_args: -no-colors
+sudo: false
+
+# coveralls.io
+service_name: travis-pro
+repo_token: 7W6Sm1Hd5WraNDkx6yypKWBi1TgiBAIUw
