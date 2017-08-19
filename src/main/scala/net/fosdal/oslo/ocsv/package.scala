@@ -4,7 +4,6 @@ import java.io._
 
 import com.opencsv._
 import com.typesafe.scalalogging.LazyLogging
-import net.fosdal.oslo.oany._
 
 import scala.collection.JavaConverters._
 

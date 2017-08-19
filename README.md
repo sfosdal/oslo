@@ -1,32 +1,54 @@
 # Oslo
-[![CircleCI](https://circleci.com/gh/sfosdal/oslo.svg?style=shield)](https://circleci.com/gh/sfosdal/oslo)
-[![Coverage Status](https://coveralls.io/repos/github/sfosdal/oslo/badge.svg?branch=master)](https://coveralls.io/github/sfosdal/oslo?branch=master)
 [![Maven Central](https://img.shields.io/maven-central/v/net.fosdal/oslo_2.11.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.fosdal%22%20AND%20a%3A%22oslo_2.11%22)
+[![Build Status](https://travis-ci.org/sfosdal/oslo.svg?branch=master)](https://travis-ci.org/sfosdal/oslo)
+[![Coverage Status](https://coveralls.io/repos/github/sfosdal/oslo/badge.svg?branch=master)](https://coveralls.io/github/sfosdal/oslo?branch=master)
 
 ### Overview
-Oslo is a tiny library of small but hopefully useful things.
+Oslo is a tiny Scala library of small but hopefully useful things.
 
-### Why would I do this?
-* I've had to write these over and over again, I want to stop repeating myself.
-* So that others may benefit from the effort of olso
-* So that others may lend their efforts to improve olso
+### Getting Started
+Oslo is currently available for Scala 2.11.
 
-## User Guide
+2.12 support is comming soon. (see: [#4 - Cross Build for 2.12](/sfosdal/oslo/issues/4))
 
-#### oslo
+
+To get started with SBT, simply add the following to your `build.sbt`
+file:
+
+```scala
+libraryDependencies += "net.fosdal" %% "oslo" % "0.2.1"
+```
+
+Release notes for Oslo are available in [CHANGES.md](CHANGES.md).
+
+### User Guide
+Most of Oslo is organized around package objects. In general, this means you need to import the package object and the methods are then available for use. Here is a list of the package objects and examples on using them:
+
+#### net.fosdal.oslo._
 TBD
 
-#### oany
+#### net.fosdal.oslo.ocsv._
 TBD
 
-#### ocsv
+#### net.fosdal.oslo.odatetime._
 TBD
 
-#### odatetime
+#### net.fosdal.oslo.oduration._
 TBD
 
-#### odouble
+#### net.fosdal.oslo.ofile._
 TBD
+
+#### net.fosdal.oslo.onumber._
+TBD
+
+#### net.fosdal.oslo.oordering._
+TBD
+
+#### net.fosdal.oslo.oseq._
+TBD
+
+#### net.fosdal.oslo.ostring._
 
 #### oduration
 pretty: converts Duration into pretty string.
@@ -61,21 +83,3 @@ res0: String = 1.1h
 res1: String = 6h
 res2: String = 409.171d
 ```
-
-#### ofile
-TBD
-
-#### oint
-TBD
-
-#### olong
-TBD
-
-#### oordering
-TBD
-
-#### oseq
-TBD
-
-#### ostring
-TBD
