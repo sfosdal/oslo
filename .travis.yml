@@ -4,12 +4,12 @@ scala:
 jdk:
   - oraclejdk7
   - oraclejdk8
-
 cache:
   directories:
   - $HOME/.ivy2/cache
   - $HOME/.sbt/launchers
-
+sbt_args: -no-colors
+sudo: false
 #before_cache:
 #  - du -h -d 1 $HOME/.ivy2/cache
 #  - du -h -d 2 $HOME/.sbt/
