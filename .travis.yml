@@ -12,5 +12,5 @@ sbt_args: -no-colors
 sudo: false
 
 # coveralls.io
-service_name: travis-pro
-repo_token: 7W6Sm1Hd5WraNDkx6yypKWBi1TgiBAIUw
+# service_name: travis-pro
+# repo_token: 7W6Sm1Hd5WraNDkx6yypKWBi1TgiBAIUw
