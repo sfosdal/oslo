@@ -1,5 +1,17 @@
 language: scala
 scala:
    - 2.11.11
+jdk:
+  - oraclejdk7
+  - oraclejdk8
+
+cache:
+  directories:
+  - $HOME/.ivy2/cache
+#  - $HOME/.sbt/0.13/dependency
+#  - $HOME/.sbt/boot/scala*
+#  - $HOME/.sbt/launchers
+#  - $HOME/.nvm
+
 #service_name: travis-pro
 #repo_token: 7W6Sm1Hd5WraNDkx6yypKWBi1TgiBAIUw
