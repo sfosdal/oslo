@@ -1,2 +1,5 @@
-service_name: travis-pro
-repo_token: 7W6Sm1Hd5WraNDkx6yypKWBi1TgiBAIUw
+language: scala
+scala:
+   - 2.11.11
+#service_name: travis-pro
+#repo_token: 7W6Sm1Hd5WraNDkx6yypKWBi1TgiBAIUw
