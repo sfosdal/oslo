@@ -4,4 +4,4 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-sbt clean test scalastyle
+sbt clean coverage test scalastyle coverageReport
