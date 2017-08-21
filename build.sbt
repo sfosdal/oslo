@@ -69,3 +69,7 @@ scalacOptions in (Compile, doc) ++= Seq("-Ywarn-value-discard")
 coverageEnabled := true
 coverageMinimum := 90
 coverageFailOnMinimum := true
+
+import org.scoverage.coveralls.Imports.CoverallsKeys._
+
+coverallsToken := Some("7W6Sm1Hd5WraNDkx6yypKWBi1TgiBAIUw")
