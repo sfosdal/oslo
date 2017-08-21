@@ -3,7 +3,6 @@
 [![Build Status](https://travis-ci.org/sfosdal/oslo.svg?branch=master)](https://travis-ci.org/sfosdal/oslo)
 [![Coverage Status](https://coveralls.io/repos/github/sfosdal/oslo/badge.svg?branch=master)](https://coveralls.io/github/sfosdal/oslo?branch=master)
 
-
 ### Overview
 Oslo is a tiny Scala library of small but hopefully useful things.
 
