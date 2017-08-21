@@ -9,5 +9,5 @@ cache:
   - $HOME/.sbt/launchers
 sbt_args: -no-colors
 sudo: false
-script: $HOME/script/test
+script: script/test
 after_success: "sbt coverageReport coveralls"
