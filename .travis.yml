@@ -9,7 +9,5 @@ cache:
   - $HOME/.sbt/launchers
 sbt_args: -no-colors
 sudo: false
-
-# coveralls.io
-# service_name: travis-pro
-# repo_token: 7W6Sm1Hd5WraNDkx6yypKWBi1TgiBAIUw
+script: script/test
+after_success: "sbt coverageReport coveralls"

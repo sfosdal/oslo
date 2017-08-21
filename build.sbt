@@ -1,4 +1,4 @@
-import ReleaseTransformations._
+import sbtrelease.ReleasePlugin.autoImport.ReleaseTransformations._
 
 name := "oslo"
 
@@ -65,3 +65,7 @@ scalacOptions ++= Seq(
 )
 
 scalacOptions in (Compile, doc) ++= Seq("-Ywarn-value-discard")
+
+coverageEnabled := true
+coverageMinimum := 90
+coverageFailOnMinimum := true
