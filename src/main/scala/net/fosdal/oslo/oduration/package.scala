@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit
 
 import scala.concurrent.duration.Duration._
 import scala.concurrent.duration._
+import scala.math.signum
 
 package object oduration {
 
@@ -43,15 +44,15 @@ package object oduration {
 
     def abs: Duration = {
       d match {
-        case d1: Duration if d1 == Inf            => MinusInf
-        case d1: Duration if d1 == MinusInf       => Inf
-        case d1: FiniteDuration if d1.toNanos < 0 => -d1
-        case d1: FiniteDuration                   => d1
-        case _                                    => Undefined
+        case d1: Duration if d1 == Inf || d1 == MinusInf => Inf
+        case d1: FiniteDuration                          => d1 * signum(d1.toNanos)
+        case _                                           => Undefined
       }
     }
 
     def pretty(precision: Int = 1): String = format(d, precision)
+
+    def toFiniteDuration: FiniteDuration = d.toUnit(NANOSECONDS).nanoseconds
 
   }
 

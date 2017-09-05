@@ -2,7 +2,7 @@ package net.fosdal.oslo.oduration
 
 import net.fosdal.oslo.util._
 import org.scalatest.prop.PropertyChecks
-import org.scalatest.{Ignore, Matchers, WordSpec}
+import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration.Duration._
 import scala.concurrent.duration._
@@ -10,12 +10,14 @@ import scala.concurrent.duration._
 // scalastyle:off magic.number
 class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
 
+  val DefaultPrettyPrecision = 1
+
   "abs" must {
     "return the absolute value of the duration" in {
       2.days.abs    shouldBe 2.days
       -2.days.abs   shouldBe 2.days
       Zero.abs      shouldBe 0.days
-      Inf.abs       shouldBe MinusInf
+      Inf.abs       shouldBe Inf
       MinusInf.abs  shouldBe Inf
       Undefined.abs shouldBe Undefined
     }
@@ -81,14 +83,37 @@ class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
       63.seconds.pretty(0)  shouldBe "1m"
       119.seconds.pretty(0) shouldBe "2m"
     }
-  }
-
-  "pretty with precision 1" must {
-    "pretty with default precision" in {
+    "pretty with precision 1 must be same as default" in {
       forAll(genDuration) { d =>
-        d.pretty(1) shouldBe d.pretty
+        d.pretty(DefaultPrettyPrecision) shouldBe d.pretty
       }
     }
+  }
+
+  "toFiniteDuration" must {
+
+    "convert finite durations to FiniteDurations" in {
+      val d: Duration        = 5.seconds
+      val fd: FiniteDuration = d.toFiniteDuration
+      fd.toSeconds shouldBe 5
+      Duration.Zero.toFiniteDuration
+      someMethod(fd)
+      // would not compile as: someMethod(d)
+      def someMethod(fd: FiniteDuration): Unit = ()
+    }
+
+    "throw exceptions when used on a non-finite duration" in {
+      an[IllegalArgumentException] should be thrownBy {
+        Duration.Inf.toFiniteDuration
+      }
+      an[IllegalArgumentException] should be thrownBy {
+        Duration.MinusInf.toFiniteDuration
+      }
+      an[IllegalArgumentException] should be thrownBy {
+        Duration.Undefined.toFiniteDuration
+      }
+    }
+
   }
 
 }
