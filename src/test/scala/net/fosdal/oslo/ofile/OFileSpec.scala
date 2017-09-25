@@ -2,7 +2,7 @@ package net.fosdal.oslo.ofile
 
 import java.io.FileNotFoundException
 
-import org.scalatest.{Ignore, Matchers, WordSpec}
+import org.scalatest.{Matchers, WordSpec}
 
 class OFileSpec extends WordSpec with Matchers {
 

@@ -3,8 +3,9 @@ package net.fosdal.oslo.oseq
 import org.scalacheck.Arbitrary._
 import org.scalacheck.Gen._
 import org.scalatest.prop.PropertyChecks
-import org.scalatest.{Ignore, Matchers, WordSpec}
+import org.scalatest.{Matchers, WordSpec}
 
+// scalastyle:off magic.number
 class OSeqSpec extends WordSpec with Matchers with PropertyChecks {
 
   "minOption and maxOption" when {
@@ -48,9 +49,47 @@ class OSeqSpec extends WordSpec with Matchers with PropertyChecks {
       }
     }
     "given an empty sequence of strings" must {
-      "find the min/max with the supplied function" in {
+      "return None" in {
         Seq.empty[String].minOptionBy(s => -s.toInt) shouldBe None
         Seq.empty[String].maxOptionBy(s => -s.toInt) shouldBe None
+      }
+    }
+  }
+
+  "minByAndApply and maxByAndApply" when {
+    "given a sequence of classes" must {
+      "find the min/max with the supplied function and return the value after the function is applied" in new Fixture {
+        Seq(Bar(3), Bar(2), Bar(7)).minByAndApply(_.i) shouldBe 2
+        Seq(Bar(5), Bar(3), Bar(9)).maxByAndApply(_.i) shouldBe 9
+      }
+    }
+  }
+
+  "minOptionByAndApply and maxOptionByAndApply" when {
+    "given a sequence of classes" must {
+      "find the min/max with the supplied function and return the value after the function is applied" in new Fixture {
+        Seq(Bar(3), Bar(2), Bar(7)).minOptionByAndApply(_.i) shouldBe Some(2)
+        Seq(Bar(5), Bar(3), Bar(9)).maxOptionByAndApply(_.i) shouldBe Some(9)
+      }
+    }
+    "given an empty sequence of classes" must {
+      "return None" in new Fixture {
+        Seq.empty[Foo].minOptionByAndApply(_.i) shouldBe None
+        Seq.empty[Foo].maxOptionByAndApply(_.i) shouldBe None
+      }
+    }
+  }
+  "minByAndApplyOrElse and maxByAndApplyOrElse" when {
+    "given a sequence of classes" must {
+      "find the min/max with the supplied function and return the value after the function is applied" in new Fixture {
+        Seq(Bar(3), Bar(2), Bar(7)).minByAndApplyOrElse(_.i, 101) shouldBe 2
+        Seq(Bar(5), Bar(3), Bar(9)).maxByAndApplyOrElse(_.i, 102) shouldBe 9
+      }
+    }
+    "given an empty sequence of classes" must {
+      "return the default" in new Fixture {
+        Seq.empty[Foo].minByAndApplyOrElse(_.i, 101) shouldBe 101
+        Seq.empty[Foo].maxByAndApplyOrElse(_.i, 102) shouldBe 102
       }
     }
   }

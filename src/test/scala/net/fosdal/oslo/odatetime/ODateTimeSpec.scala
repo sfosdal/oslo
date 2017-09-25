@@ -2,7 +2,7 @@ package net.fosdal.oslo.odatetime
 
 import org.joda.time.DateTime
 import org.scalatest.prop.PropertyChecks
-import org.scalatest.{Ignore, Matchers, WordSpec}
+import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration._
 

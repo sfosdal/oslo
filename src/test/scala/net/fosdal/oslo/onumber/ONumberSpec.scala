@@ -2,8 +2,6 @@ package net.fosdal.oslo.onumber
 
 import org.scalatest.{Matchers, WordSpec}
 
-import scala.language.postfixOps
-
 // scalastyle:off magic.number
 class ONumberSpec extends WordSpec with Matchers {
 
