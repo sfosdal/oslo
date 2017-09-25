@@ -60,22 +60,30 @@ class OStringSpec extends WordSpec with Matchers with PropertyChecks {
 
   "asBytes" must {
     "parse standard formats properly" in {
-      "1b".asBytes     shouldBe 1L
-      "2000b".asBytes  shouldBe 2000L
-      "1.5kb".asBytes  shouldBe 1536L
+      "1b".asBytes shouldBe 1L
+      "2000b".asBytes shouldBe 2000L
+      "1.5kb".asBytes shouldBe 1536L
       "2000kb".asBytes shouldBe 2048000L
-      "1.5mb".asBytes  shouldBe 1572864L
+      "1.5mb".asBytes shouldBe 1572864L
       "2000mb".asBytes shouldBe 2097152000L
-      "1.5gb".asBytes  shouldBe 1610612736L
+      "1.5gb".asBytes shouldBe 1610612736L
       "2000gb".asBytes shouldBe 2147483648000L
-      "1.5tb".asBytes  shouldBe 1649267441664L
+      "1.5tb".asBytes shouldBe 1649267441664L
       "2000tb".asBytes shouldBe 2199023255552000L
-      "1.5pb".asBytes  shouldBe 1688849860263936L
+      "1.5pb".asBytes shouldBe 1688849860263936L
       "2000pb".asBytes shouldBe 2251799813685248000L
-      "1.5eb".asBytes  shouldBe 1729382256910270464L
+      "1.5eb".asBytes shouldBe 1729382256910270464L
       "2000eb".asBytes shouldBe 9223372036854775807L
-      "8eb".asBytes    shouldBe 9223372036854775807L
+      "8eb".asBytes shouldBe 9223372036854775807L
     }
+    "round decimal kilobytes" in {
+      "9.123kb".asBytes shouldBe 9342L
+      "9.1b".asBytes shouldBe 9L
+      "9.1".asBytes shouldBe 9L
+      "9.5b".asBytes shouldBe 10L
+      "9.5".asBytes shouldBe 10L
+    }
+
     "be forgiving" in {
       "  1  b  ".asBytes shouldBe 1L
     }
@@ -88,25 +96,15 @@ class OStringSpec extends WordSpec with Matchers with PropertyChecks {
           "9xxx".asBytes
         }
       }
-      "given decimal bytes" in {
-        intercept[NumberFormatException] {
-          "9.1".asBytes
-        }
-      }
-      "given decimal kilobytes" in {
-        intercept[NumberFormatException] {
-          "9.1001kb".asBytes
-        }
-      }
     }
   }
 
   trait Fixture {
-    val alpha            = """[a-zA-Z]"""
-    val onlyAlpha        = s"""^$alpha*$$"""
-    val numeric          = """[0-9]"""
-    val onlyNumeric      = s"""^$numeric*$$"""
-    val alphanumeric     = """[a-zA-Z0-9]"""
+    val alpha = """[a-zA-Z]"""
+    val onlyAlpha = s"""^$alpha*$$"""
+    val numeric = """[0-9]"""
+    val onlyNumeric = s"""^$numeric*$$"""
+    val alphanumeric = """[a-zA-Z0-9]"""
     val onlyAlphanumeric = s"""^$alphanumeric*$$"""
   }
 

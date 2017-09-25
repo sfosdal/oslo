@@ -44,7 +44,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",
   "joda-time"                  % "joda-time"      % "2.9.9",
   "org.scalacheck"             %% "scalacheck"    % "1.13.5" % Test,
-  "org.scalatest"              %% "scalatest"     % "3.0.3" % Test
+  "org.scalatest"              %% "scalatest"     % "3.0.4" % Test
 )
 
 dependencyUpdatesFilter -= moduleFilter(organization = "org.scala-lang")

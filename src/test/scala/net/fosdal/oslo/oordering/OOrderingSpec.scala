@@ -1,7 +1,7 @@
 package net.fosdal.oslo.oordering
 
 import org.scalatest.prop.PropertyChecks
-import org.scalatest.{Ignore, Matchers, WordSpec}
+import org.scalatest.{Matchers, WordSpec}
 
 class OOrderingSpec extends WordSpec with Matchers with PropertyChecks {
 
@@ -39,16 +39,20 @@ class OOrderingSpec extends WordSpec with Matchers with PropertyChecks {
     val orderedFoo1 = OrderedFoo(1)
     val orderedFoo2 = OrderedFoo(2)
     val orderedFoo3 = OrderedFoo(3)
+
     case class OrderedFoo(i: Int) extends Ordered[OrderedFoo] {
       override def compare(that: OrderedFoo): Int = i compare that.i
     }
+
   }
 
   trait OrderingFixture {
     val foo1 = Foo(1)
     val foo2 = Foo(2)
     val foo3 = Foo(3)
+
     case class Foo(i: Int)
+
     implicit val fooOrdering: Ordering[Foo] = Ordering.by(_.i)
   }
 
