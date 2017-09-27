@@ -12,11 +12,10 @@ Oslo is currently available for Scala 2.11.
 2.12 support is comming soon. (see: [#4 - Cross Build for 2.12](/sfosdal/oslo/issues/4))
 
 
-To get started with SBT, simply add the following to your `build.sbt`
-file:
+Using SBT, add the following to your `build.sbt` file (see maven badge for latest version)
 
 ```scala
-libraryDependencies += "net.fosdal" %% "oslo" % "0.2.1"
+libraryDependencies += "net.fosdal" %% "oslo" % "<version>"
 ```
 
 Release notes for Oslo are available in [CHANGES.md](CHANGES.md).
