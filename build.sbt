@@ -51,8 +51,7 @@ dependencyUpdatesFilter -= moduleFilter(organization = "org.scala-lang")
 
 scalacOptions ++= Seq(
   "-deprecation",
-  "-encoding",
-  "UTF-8",
+  "-encoding", "UTF-8",
   "-feature",
   "-unchecked",
   "-Xfatal-warnings",
@@ -66,6 +65,5 @@ scalacOptions ++= Seq(
 
 scalacOptions in (Compile, doc) ++= Seq("-Ywarn-value-discard")
 
-coverageEnabled := true
 coverageMinimum := 90
 coverageFailOnMinimum := true
