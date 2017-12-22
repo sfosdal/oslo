@@ -2,6 +2,7 @@ package net.fosdal.oslo
 
 import scala.annotation.tailrec
 
+// TODO support more numerical types? (byte, short, bigInt, etc)
 package object onumber {
 
   private[this] val DefaultPrettyFactor: Int    = 1000
@@ -19,7 +20,7 @@ package object onumber {
     }
   }
 
-  implicit class IntOps(val n: Int) extends AnyVal {
+  implicit class IntOps(private val n: Int) extends AnyVal {
     def factorial: Long = f(n.toLong)
 
     def choose(k: Int): Long = {
@@ -48,7 +49,7 @@ package object onumber {
 
   }
 
-  implicit class LongOps(val n: Long) extends AnyVal {
+  implicit class LongOps(private val n: Long) extends AnyVal {
     def factorial: Long = f(n)
 
     def choose(k: Long): Long = {
@@ -85,7 +86,7 @@ package object onumber {
 
   }
 
-  implicit class DoubleOps(val n: Double) extends AnyVal {
+  implicit class DoubleOps(private val n: Double) extends AnyVal {
 
     def pretty(factor: Int = DefaultPrettyFactor,
                precision: Int = DefaultPrettyPrecision,
@@ -95,7 +96,7 @@ package object onumber {
       @tailrec
       def pretty(d: Double, u: Seq[String]): String = {
         val r = d / factor
-        if (r < margin || u.length == 1) {
+        if (r < margin || u.lengthCompare(1) == 0) {
           d.formatted(s"%.${precision}f${u.head}")
         } else {
           pretty(r, u.tail)

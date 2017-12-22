@@ -38,21 +38,29 @@ package object oduration {
       .get // given the definition of a FiniteDuration this is safe
   }
 
-  implicit class DurationOps(val d: Duration) extends AnyVal {
+  // TODO JodaTime conversions with scala.Duration/Interval/java.duration/etc
+  implicit class DurationOps(private val d: Duration) extends AnyVal {
 
     def pretty: String = pretty()
 
     def abs: Duration = {
       d match {
-        case d1: Duration if d1 == Inf || d1 == MinusInf => Inf
-        case d1: FiniteDuration                          => d1 * signum(d1.toNanos)
-        case _                                           => Undefined
+        case d1: FiniteDuration => d1 * signum(d1.toNanos)
+        case Inf | MinusInf     => Inf
+        case _                  => Undefined
       }
     }
 
     def pretty(precision: Int = 1): String = format(d, precision)
 
-    def toFiniteDuration: FiniteDuration = d.toUnit(NANOSECONDS).nanoseconds
+    def toFiniteDuration: FiniteDuration = {
+      d match {
+        case fd: FiniteDuration => fd
+        case _                  => throw new IllegalArgumentException(s"""unable to convert $d to FiniteDuration""")
+      }
+    }
+
+    def toMaybeFiniteDuration: Option[FiniteDuration] = Some(d).collect { case d: FiniteDuration => d }
 
   }
 

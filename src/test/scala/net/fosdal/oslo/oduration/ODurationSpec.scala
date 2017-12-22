@@ -1,6 +1,6 @@
 package net.fosdal.oslo.oduration
 
-import net.fosdal.oslo.util._
+import org.scalacheck.Gen
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.{Matchers, WordSpec}
 
@@ -84,8 +84,8 @@ class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
       119.seconds.pretty(0) shouldBe "2m"
     }
     "pretty with precision 1 must be same as default" in {
-      forAll(genDuration) { d =>
-        d.pretty(DefaultPrettyPrecision) shouldBe d.pretty
+      forAll(Gen.chooseNum(Long.MinValue + 1L, Long.MaxValue)) { nanos =>
+        nanos.nanoseconds.pretty(DefaultPrettyPrecision) shouldBe nanos.nanoseconds.pretty
       }
     }
   }
@@ -93,13 +93,11 @@ class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
   "toFiniteDuration" must {
 
     "convert finite durations to FiniteDurations" in {
-      val d: Duration = 5.seconds
-      val fd: FiniteDuration = d.toFiniteDuration
-      fd.toSeconds shouldBe 5
-      Duration.Zero.toFiniteDuration
-      someMethod(fd)
-
-      def someMethod(x: FiniteDuration): Unit = ()
+      forAll(Gen.chooseNum(Long.MinValue + 1L, Long.MaxValue)) { nanos: Long =>
+        val d: Duration = nanos.nanoseconds
+        val fd: FiniteDuration = d.toFiniteDuration
+        fd shouldBe nanos.nanoseconds
+      }
     }
 
     "throw exceptions when used on a non-finite duration" in {
@@ -112,6 +110,24 @@ class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
       an[IllegalArgumentException] should be thrownBy {
         Duration.Undefined.toFiniteDuration
       }
+    }
+
+  }
+
+  "toMaybeFiniteDuration" must {
+
+    "convert finite durations to FiniteDurations" in {
+      forAll(Gen.chooseNum(Long.MinValue + 1L, Long.MaxValue)) { nanos: Long =>
+        val d: Duration = nanos.nanoseconds
+        val fd: Option[FiniteDuration] = d.toMaybeFiniteDuration
+        fd shouldBe Some(nanos.nanoseconds)
+      }
+    }
+
+    "throw exceptions when used on a non-finite duration" in {
+      Duration.Inf.toMaybeFiniteDuration shouldBe None
+      Duration.MinusInf.toMaybeFiniteDuration shouldBe None
+      Duration.Undefined.toMaybeFiniteDuration shouldBe None
     }
 
   }

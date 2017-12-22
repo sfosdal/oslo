@@ -31,11 +31,11 @@ package object oordering {
     */
   def min[A: Ordering](x: A, y: A): A = x.min(y)
 
-  implicit class OrderedOps[O](val o: Ordered[O]) extends AnyVal {
+  implicit class OrderedOps[O](private val o: Ordered[O]) extends AnyVal {
     def in(min: O, max: O): Boolean = o >= min && o <= max
   }
 
-  implicit class OrderingOps[O](val o: O) extends AnyVal {
+  implicit class OrderingOps[O](private val o: O) extends AnyVal {
     def in(min: O, max: O)(implicit ord: Ordering[O]): Boolean = {
       ord.gteq(o, min) && ord.lteq(o, max)
     }

@@ -2,7 +2,7 @@ package net.fosdal.oslo
 
 package object oseq {
 
-  implicit class SeqOps[A](val s: Seq[A]) extends AnyVal {
+  implicit class SeqOps[A](private val s: Seq[A]) extends AnyVal {
 
     def minOption(implicit cmp: Ordering[A]): Option[A] = if (s.isEmpty) None else Some(s.min)
 

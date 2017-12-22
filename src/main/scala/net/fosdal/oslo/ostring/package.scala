@@ -4,16 +4,17 @@ import scala.math.pow
 
 package object ostring {
 
-  private[this] val NotAlpha = "[^a-zA-Z]"
-  private[this] val NotNumeric = "[^0-9]"
+  private[this] val NotAlpha        = "[^a-zA-Z]"
+  private[this] val NotNumeric      = "[^0-9]"
   private[this] val NotAlphaNumeric = "[^a-zA-Z0-9]"
 
-  private[this] val ByteFactors = Seq("b", "kb", "mb", "gb", "tb", "pb", "eb").zipWithIndex
-    .map(t => t._1 -> pow(1024D, t._2.toDouble))
-    .toMap
-  private[this] val BytePattern = "([0-9.]+?)\\s*([yzeptgmk]?b)".r
+  private[this] val ByteFactors =
+    Seq("b", "kb", "mb", "gb", "tb", "pb", "eb").zipWithIndex // TODO centralize this with what is in "pretty"
+      .map(t => t._1 -> pow(1024D, t._2.toDouble)) // TODO why 1024 here but 1000 elsewhere
+      .toMap
+  private[this] val BytePattern = "([0-9.]+?)\\s*([yzeptgmk]?b)".r // TODO centralize this with what is in "pretty"
 
-  implicit class StringOps(val s: String) extends AnyVal {
+  implicit class StringOps(private val s: String) extends AnyVal {
 
     /** removes all non-alpha characters from the [[scala.Predef.String]] (non-`[a-zA-Z]`)
       *

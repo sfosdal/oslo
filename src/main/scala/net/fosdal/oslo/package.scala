@@ -10,13 +10,13 @@ import scala.language.{implicitConversions, reflectiveCalls}
 // scalastyle:off structural.type
 package object oslo extends Oslo {
 
-  implicit def NoOpCloser[A](a: A): Unit = {
-    val _ = a
-  }
+  implicit def NoOpCloser[A](a: A): Unit = ()
 
-  implicit def CloseCloser[A <: { def close(): Unit }](a: A): Unit = a.close()
+  implicit def CloseCloser[A <: { def close(): Unit }](a: A): Unit = if (null != a) a.close() // scalastyle:ignore null
 
-  implicit def StopCloser[A <: { def stop(): Unit }](a: A): Unit = a.stop()
+  implicit def StopCloser[A <: { def stop(): Unit }](a: A): Unit = if (null != a) a.stop() // scalastyle:ignore null
+
+  implicit def ShutdownCloser[A <: { def shutdown(): Unit }](a: A): Unit = if (null != a) a.shutdown() // scalastyle:ignore null
 
   def using[A, B](resource: A)(f: A => B)(implicit closer: A => Unit): B = {
     try f(resource)

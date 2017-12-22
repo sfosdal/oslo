@@ -32,7 +32,7 @@ package object ocsv extends Ocsv with LazyLogging {
       .getOrElse(Seq.empty[Seq[String]]) partialTap {
       case recs: Seq[Seq[String]] if recs.nonEmpty =>
         val len = recs.head.length
-        if (recs.tail.exists(_.length != len)) {
+        if (recs.tail.exists(_.lengthCompare(len) != 0)) {
           throw new IllegalArgumentException(s"found records with varying field count")
         }
     }
@@ -83,14 +83,14 @@ package object ocsv extends Ocsv with LazyLogging {
       case lines: Seq[Seq[String]] if lines.nonEmpty =>
         if (strictRecordLength) {
           val len = lines.head.length
-          if (lines.tail.exists(_.length != len)) {
+          if (lines.tail.exists(_.lengthCompare(len) != 0)) {
             throw new IllegalArgumentException(s"found records with varying field count")
           }
         }
     }
   }
 
-  implicit class CSVParserOps(val p: CSVParser) extends AnyVal {
+  implicit class CSVParserOps(private val p: CSVParser) extends AnyVal {
 
     private[this] def builder =
       new CSVParserBuilder()

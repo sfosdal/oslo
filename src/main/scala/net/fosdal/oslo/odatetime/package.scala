@@ -8,7 +8,7 @@ package object odatetime {
 
   implicit val ordering: Ordering[DateTime] = Ordering.by(_.getMillis)
 
-  implicit class DateTimeOps(val dateTime: DateTime) extends AnyVal with Ordered[DateTime] {
+  implicit class DateTimeOps(private val dateTime: DateTime) extends AnyVal with Ordered[DateTime] {
 
     override def compare(that: DateTime): Int = Ordering[DateTime].compare(dateTime, that)
 
