@@ -239,7 +239,7 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks with OsloMatch
       val touchable = Touchable("unused")
       touchable should not be 'touched
       var didIt = false
-      val tappedTouchable: Touchable = touchable.tap { (t: Touchable) =>
+      val tappedTouchable: Touchable = touchable.tap { t =>
         didIt = true
         t shouldBe theSameInstanceAs(touchable)
         t.touch()
@@ -258,7 +258,7 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks with OsloMatch
       touchable should not be 'touched
       var didIt = false
       val tappedTouchable: Touchable = touchable.partialTap {
-        case (t: Touchable) if t.id == "covered" =>
+        case t if t.id == "covered" =>
           didIt = true
           t shouldBe theSameInstanceAs(touchable)
           t.touch()
@@ -274,7 +274,7 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks with OsloMatch
       touchable should not be 'touched
       var didIt = false
       val tappedTouchable: Touchable = touchable.partialTap {
-        case (t: Touchable) if t.id == "covered" =>
+        case t if t.id == "covered" =>
           didIt = true
           t shouldBe theSameInstanceAs(touchable)
           t.touch()

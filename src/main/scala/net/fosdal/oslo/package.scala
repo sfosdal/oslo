@@ -7,6 +7,9 @@ import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.{implicitConversions, reflectiveCalls}
 
+// TODO should tap/partialTap accept a function that returns Unit or Any?
+// TODO consolidate the tap/partialTap forms
+
 // scalastyle:off structural.type
 package object oslo extends Oslo {
 
@@ -79,14 +82,24 @@ package object oslo extends Oslo {
     pollUntil(config)(block)
   }
 
+  def tap[A](a: A)(f: A => Unit): A = {
+    f(a)
+    a
+  }
+
+  def partialTap[A](a: A)(pf: PartialFunction[A, Unit]): A = {
+    pf.lift(a)
+    a
+  }
+
   implicit class AnyOps[A](val a: A) extends AnyVal {
 
-    def partialTap(pf: PartialFunction[A, _]): A = {
+    def partialTap(pf: PartialFunction[A, Unit]): A = {
       pf.lift(a)
       a
     }
 
-    def tap(f: Function[A, _]): A = {
+    def tap(f: A => Unit): A = {
       f(a)
       a
     }
