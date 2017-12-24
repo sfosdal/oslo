@@ -6,6 +6,7 @@ import scala.concurrent.duration.Duration._
 import scala.concurrent.duration._
 import scala.math.signum
 
+// TODO include more JodaTime conversions with scala.Duration/Interval/java.duration/etc ???
 package object oduration {
 
   private[this] val abbr = Map(
@@ -35,13 +36,14 @@ package object oduration {
       .values()
       .reverse
       .find(d.abs.toUnit(_) >= 1)
-      .get // given the definition of a FiniteDuration this is safe
+      .get // FIXME given the definition of a FiniteDuration & TimeUnit this is safe
   }
 
-  // TODO JodaTime conversions with scala.Duration/Interval/java.duration/etc
   implicit class DurationOps(private val d: Duration) extends AnyVal {
 
-    def pretty: String = pretty()
+    def pretty: String = pretty(1)
+
+    def pretty(precision: Int): String = format(d, precision)
 
     def abs: Duration = {
       d match {
@@ -50,8 +52,6 @@ package object oduration {
         case _                  => Undefined
       }
     }
-
-    def pretty(precision: Int = 1): String = format(d, precision)
 
     def toFiniteDuration: FiniteDuration = {
       d match {

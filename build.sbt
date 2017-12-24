@@ -49,7 +49,6 @@ libraryDependencies ++= Seq(
 
 dependencyUpdatesFilter -= moduleFilter(organization = "org.scala-lang")
 
-// TODO upgrade
 scalacOptions ++= Seq(
   "-deprecation",
   "-encoding", "UTF-8",
@@ -64,8 +63,6 @@ scalacOptions ++= Seq(
   "-Ywarn-unused",
   "-Ywarn-value-discard"
 )
-
-//scalacOptions in (Compile, doc) ++= Seq("-Ywarn-value-discard")
 
 coverageMinimum := 100
 coverageFailOnMinimum := true

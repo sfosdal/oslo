@@ -5,23 +5,26 @@ import scala.annotation.tailrec
 // TODO support more numerical types? (byte, short, bigInt, etc)
 package object onumber {
 
+  val units = Seq("b", "kb", "mb", "gb", "tb", "pb", "eb", "zv", "yb")
+
   private[this] val DefaultPrettyFactor: Int    = 1000
   private[this] val DefaultPrettyPrecision: Int = 1
   private[this] val DefaultPrettyMargin: Double = 0.9
 
   @tailrec
-  private def f(j: Long, result: Long = 1L): Long = {
+  private def fact(j: Long, result: Long = 1L): Long = {
     if (j == 0) {
       result
     } else if (j < 0) {
-      throw new IllegalArgumentException("factorials of negative numbers not yet supported")
+      throw new IllegalArgumentException("factorials of negative numbers not yet supported") // FIXME
     } else {
-      f(j - 1, j * result)
+      fact(j - 1, j * result)
     }
   }
 
   implicit class IntOps(private val n: Int) extends AnyVal {
-    def factorial: Long = f(n.toLong)
+
+    def factorial: Long = fact(n.toLong)
 
     def choose(k: Int): Long = {
       if (k > n) {
@@ -50,7 +53,8 @@ package object onumber {
   }
 
   implicit class LongOps(private val n: Long) extends AnyVal {
-    def factorial: Long = f(n)
+
+    def factorial: Long = fact(n)
 
     def choose(k: Long): Long = {
       if (k > n) {
@@ -91,7 +95,6 @@ package object onumber {
     def pretty(factor: Int = DefaultPrettyFactor,
                precision: Int = DefaultPrettyPrecision,
                margin: Double = DefaultPrettyMargin): String = {
-      val units = Seq("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
 
       @tailrec
       def pretty(d: Double, u: Seq[String]): String = {

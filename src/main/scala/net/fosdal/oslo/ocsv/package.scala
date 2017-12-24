@@ -111,7 +111,3 @@ package object ocsv extends Ocsv with LazyLogging {
   }
 
 }
-
-trait Ocsv {
-  implicit val csvParser: CSVParser = new CSVParserBuilder().withIgnoreLeadingWhiteSpace(true).build()
-}
