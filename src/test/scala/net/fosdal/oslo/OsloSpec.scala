@@ -157,6 +157,7 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks with OsloMatch
   }
 
   "sleep" must {
+
     "throw exceptions on negative durations" in {
       (the[IllegalArgumentException] thrownBy {
         sleep(-1)
@@ -165,30 +166,34 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks with OsloMatch
 
     "use Short millis to sleep" in {
       val millis = 2000.toShort
-      val start  = System.nanoTime()
+      val start = System.nanoTime()
       sleep(millis)
       val actual = (System.nanoTime() - start).nanos.toMillis
       actual.toShort shouldBe 2000.toShort +- 100.toShort
     }
+
     "use Int millis to sleep" in {
       val millis = 2000
-      val start  = System.nanoTime()
+      val start = System.nanoTime()
       sleep(millis)
       val actual = (System.nanoTime() - start).nanos.toMillis
       actual.toInt shouldBe 2000 +- 100
     }
+
     "use Long millis to sleep" in {
       val millis = 2000L
-      val start  = System.nanoTime()
+      val start = System.nanoTime()
       sleep(millis)
       val actual = (System.nanoTime() - start).nanos.toMillis
       actual shouldBe 2000L +- 100L
     }
+
   }
 
   "pollingUntil" must {
+
     "periodically poll its block until the condition is met" in new UntilFixture {
-      val limit   = 3
+      val limit = 3
       val mutable = new UntilMutable(limit)
 
       mutable.i shouldBe 0
@@ -201,7 +206,7 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks with OsloMatch
     }
 
     "be configurable with config class" in new UntilFixture {
-      val limit   = 3
+      val limit = 3
       val mutable = new UntilMutable(limit)
 
       mutable.i shouldBe 0
@@ -218,7 +223,7 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks with OsloMatch
     }
 
     "be configurable with plain values" in new UntilFixture {
-      val limit   = 3
+      val limit = 3
       val mutable = new UntilMutable(limit)
 
       mutable.i shouldBe 0
@@ -234,65 +239,136 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks with OsloMatch
 
   }
 
-  "tap" must {
-    "operate on the supplied instance and return it when complete" in new TapFixture {
-      val touchable = Touchable("unused")
-      touchable should not be 'touched
-      var didIt = false
-      val tappedTouchable: Touchable = touchable.tap { t =>
-        didIt = true
-        t shouldBe theSameInstanceAs(touchable)
-        t.touch()
-        t shouldBe 'touched
-        ()
+  "tap" when {
+
+    "as an explicit method" must {
+      "operate on the supplied instance and return it when complete" in new TapFixture {
+        val touchable = Touchable("unused")
+        touchable should not be 'touched
+        var didIt = false
+        val tappedTouchable: Touchable = tap(touchable) { t =>
+          didIt = true
+          t shouldBe theSameInstanceAs(touchable)
+          t.touch()
+          t shouldBe 'touched
+          ()
+        }
+        didIt shouldBe true
+        tappedTouchable shouldBe theSameInstanceAs(touchable)
+        touchable shouldBe 'touched
       }
-      didIt shouldBe true
-      tappedTouchable shouldBe theSameInstanceAs(touchable)
-      touchable shouldBe 'touched
     }
+
+    "as an implicit method" must {
+      "operate on the supplied instance and return it when complete" in new TapFixture {
+        val touchable = Touchable("unused")
+        touchable should not be 'touched
+        var didIt = false
+        val tappedTouchable: Touchable = touchable.tap { t =>
+          didIt = true
+          t shouldBe theSameInstanceAs(touchable)
+          t.touch()
+          t shouldBe 'touched
+          ()
+        }
+        didIt shouldBe true
+        tappedTouchable shouldBe theSameInstanceAs(touchable)
+        touchable shouldBe 'touched
+      }
+    }
+
   }
 
   "partialTap" must {
-    "operate on the supplied instance only if it is covered by the partial function and then return it when complete" in new TapFixture {
-      val touchable = Touchable("covered")
-      touchable should not be 'touched
-      var didIt = false
-      val tappedTouchable: Touchable = touchable.partialTap {
-        case t if t.id == "covered" =>
-          didIt = true
-          t shouldBe theSameInstanceAs(touchable)
-          t.touch()
-          t shouldBe 'touched
-          ()
+
+    "as an implicit method" must {
+
+      "operate on the supplied instance only if it is covered by the partial function and then return it when complete" in new TapFixture {
+        val touchable = Touchable("covered")
+        touchable should not be 'touched
+        var didIt = false
+        val tappedTouchable: Touchable = touchable.partialTap {
+          case t if t.id == "covered" =>
+            didIt = true
+            t shouldBe theSameInstanceAs(touchable)
+            t.touch()
+            t shouldBe 'touched
+            ()
+        }
+        didIt shouldBe true
+        tappedTouchable shouldBe theSameInstanceAs(touchable)
+        touchable shouldBe 'touched
       }
-      didIt shouldBe true
-      tappedTouchable shouldBe theSameInstanceAs(touchable)
-      touchable shouldBe 'touched
-    }
-    "not operate on the supplied instance if it is not covered by the partial function and then return it when complete" in new TapFixture {
-      val touchable = Touchable("not covered")
-      touchable should not be 'touched
-      var didIt = false
-      val tappedTouchable: Touchable = touchable.partialTap {
-        case t if t.id == "covered" =>
-          didIt = true
-          t shouldBe theSameInstanceAs(touchable)
-          t.touch()
-          t shouldBe 'touched
-          ()
+
+      "not operate on the supplied instance if it is not covered by the partial function and then return it when complete" in new TapFixture {
+        val touchable = Touchable("not covered")
+        touchable should not be 'touched
+        var didIt = false
+        val tappedTouchable: Touchable = touchable.partialTap {
+          case t if t.id == "covered" =>
+            didIt = true
+            t shouldBe theSameInstanceAs(touchable)
+            t.touch()
+            t shouldBe 'touched
+            ()
+        }
+        didIt shouldBe false
+        tappedTouchable shouldBe theSameInstanceAs(touchable)
+        touchable should not be 'touched
       }
-      didIt shouldBe false
-      tappedTouchable shouldBe theSameInstanceAs(touchable)
-      touchable should not be 'touched
+
     }
+
+    "as an explicit method" must {
+
+      "operate on the supplied instance only if it is covered by the partial function and then return it when complete" in new TapFixture {
+        val touchable = Touchable("covered")
+        touchable should not be 'touched
+        var didIt = false
+        val tappedTouchable: Touchable = partialTap(touchable) {
+          case t if t.id == "covered" =>
+            didIt = true
+            t shouldBe theSameInstanceAs(touchable)
+            t.touch()
+            t shouldBe 'touched
+            ()
+        }
+        didIt shouldBe true
+        tappedTouchable shouldBe theSameInstanceAs(touchable)
+        touchable shouldBe 'touched
+      }
+
+      "not operate on the supplied instance if it is not covered by the partial function and then return it when complete" in new TapFixture {
+        val touchable = Touchable("not covered")
+        touchable should not be 'touched
+        var didIt = false
+        val tappedTouchable: Touchable = partialTap(touchable) {
+          case t if t.id == "covered" =>
+            didIt = true
+            t shouldBe theSameInstanceAs(touchable)
+            t.touch()
+            t shouldBe 'touched
+            ()
+        }
+        didIt shouldBe false
+        tappedTouchable shouldBe theSameInstanceAs(touchable)
+        touchable should not be 'touched
+      }
+
+    }
+
   }
 
   trait TapFixture {
+
     case class Touchable(id: String) {
       var isTouched = false
+
       def touch(): Unit = isTouched = true
+
       def reset(): Unit = isTouched = false
     }
+
   }
 
   trait UsingFixture {
