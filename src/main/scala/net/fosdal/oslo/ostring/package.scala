@@ -8,12 +8,12 @@ package object ostring {
   private[this] val NotNumeric      = "[^0-9]"
   private[this] val NotAlphaNumeric = "[^a-zA-Z0-9]"
 
-  // TODO centralize this with what is in "pretty"
+  // TODO to keep with DRY, centralize this with what is in "pretty"
   private[this] val ByteFactors =
-    Seq("b", "kb", "mb", "gb", "tb", "pb", "eb", "zb", "yb").zipWithIndex
-      .map(t => t._1 -> pow(1000D, t._2.toDouble))
+    onumber.units.zipWithIndex
+      .map(t => t._1 -> pow(1000D, t._2.toDouble)) // HERE
       .toMap
-  private[this] val BytePattern = "([0-9.]+?)\\s*([yzeptgmk]?b)".r
+  private[this] val BytePattern = "([0-9.]+?)\\s*([yzeptgmk]?b)".r // AND HERE
 
   implicit class StringOps(private val s: String) extends AnyVal {
 
