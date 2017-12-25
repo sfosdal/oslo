@@ -2,7 +2,6 @@ package net.fosdal.oslo
 
 import scala.annotation.tailrec
 
-// TODO support more numerical types? (byte, short, bigInt, etc)
 package object onumber {
 
   private[this] val DefaultPrecision: Int = 1
