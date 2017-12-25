@@ -10,6 +10,9 @@ import scala.language.{implicitConversions, reflectiveCalls}
 // scalastyle:off structural.type
 package object oslo extends Oslo {
 
+  val BytesPerKilobyte = 1000
+  val ByteUnits        = Seq("b", "kb", "mb", "gb", "tb", "pb", "eb", "zv", "yb")
+
   implicit def NoOpCloser[A](a: A): Unit = ()
 
   implicit def CloseCloser[A <: { def close(): Unit }](a: A): Unit = if (null != a) a.close() // scalastyle:ignore null

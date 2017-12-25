@@ -8,12 +8,11 @@ package object ostring {
   private[this] val NotNumeric      = "[^0-9]"
   private[this] val NotAlphaNumeric = "[^a-zA-Z0-9]"
 
-  // TODO to keep with DRY, centralize this with what is in "pretty"
   private[this] val ByteFactors =
-    onumber.units.zipWithIndex
-      .map(t => t._1 -> pow(1000D, t._2.toDouble)) // HERE
+    ByteUnits.zipWithIndex
+      .map(t => t._1 -> pow(BytesPerKilobyte.toDouble, t._2.toDouble)) // TODO
       .toMap
-  private[this] val BytePattern = "([0-9.]+?)\\s*([yzeptgmk]?b)".r // AND HERE
+  private[this] val BytePattern = s"([0-9.]+?)\\s*([${ByteUnits.tail.reverse.map(_.head).mkString}]?b)".r
 
   implicit class StringOps(private val s: String) extends AnyVal {
 
@@ -88,6 +87,7 @@ package object ostring {
       *                                         is parsable to a [[scala.Long]]
       * @version 0.3.0
       */
+    // TODO is this case sensitive?
     @throws(classOf[NumberFormatException])
     def asBytes: Long = {
       s.toLowerCase.trim match {

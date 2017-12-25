@@ -5,11 +5,8 @@ import scala.annotation.tailrec
 // TODO support more numerical types? (byte, short, bigInt, etc)
 package object onumber {
 
-  val units = Seq("b", "kb", "mb", "gb", "tb", "pb", "eb", "zv", "yb")
-
-  private[this] val DefaultPrettyFactor: Int    = 1000
-  private[this] val DefaultPrettyPrecision: Int = 1
-  private[this] val DefaultPrettyMargin: Double = 0.9
+  private[this] val DefaultPrecision: Int = 1
+  private[this] val DefaultMargin: Double = 0.9
 
   @tailrec
   private def fact(j: Long, result: Long = 1L): Long = {
@@ -42,13 +39,11 @@ package object onumber {
       }
     }
 
-    def pretty(factor: Int = DefaultPrettyFactor,
-               precision: Int = DefaultPrettyPrecision,
-               margin: Double = DefaultPrettyMargin): String = {
+    def pretty(factor: Int = BytesPerKilobyte, precision: Int = DefaultPrecision, margin: Double = DefaultMargin): String = {
       n.toDouble.pretty(factor, precision, margin)
     }
 
-    def pretty: String = pretty(DefaultPrettyFactor, DefaultPrettyPrecision, DefaultPrettyMargin)
+    def pretty: String = pretty()
 
   }
 
@@ -80,21 +75,17 @@ package object onumber {
       }
     }
 
-    def pretty(factor: Int = DefaultPrettyFactor,
-               precision: Int = DefaultPrettyPrecision,
-               margin: Double = DefaultPrettyMargin): String = {
+    def pretty(factor: Int = BytesPerKilobyte, precision: Int = DefaultPrecision, margin: Double = DefaultMargin): String = {
       n.toDouble.pretty(factor, precision, margin)
     }
 
-    def pretty: String = pretty(DefaultPrettyFactor, DefaultPrettyPrecision, DefaultPrettyMargin)
+    def pretty: String = pretty()
 
   }
 
   implicit class DoubleOps(private val n: Double) extends AnyVal {
 
-    def pretty(factor: Int = DefaultPrettyFactor,
-               precision: Int = DefaultPrettyPrecision,
-               margin: Double = DefaultPrettyMargin): String = {
+    def pretty(factor: Int = BytesPerKilobyte, precision: Int = DefaultPrecision, margin: Double = DefaultMargin): String = {
 
       @tailrec
       def pretty(d: Double, u: Seq[String]): String = {
@@ -106,10 +97,10 @@ package object onumber {
         }
       }
 
-      pretty(n, units)
+      pretty(n, ByteUnits)
     }
 
-    def pretty: String = pretty(DefaultPrettyFactor, DefaultPrettyPrecision, DefaultPrettyMargin)
+    def pretty: String = pretty()
 
   }
 
