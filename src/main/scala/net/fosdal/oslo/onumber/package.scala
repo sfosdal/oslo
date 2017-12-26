@@ -2,7 +2,6 @@ package net.fosdal.oslo
 
 import scala.annotation.tailrec
 
-// scalastyle:off
 package object onumber {
 
   private[this] val DefaultPrecision: Int = 1
@@ -109,19 +108,8 @@ package object onumber {
 
     def pow(exp: Int): Long = pow(exp.toLong)
 
+    // scalastyle:off cyclomatic.complexity
     def pow(exp: Long): Long = {
-
-      @tailrec
-      def _pow(acc: Long, b: Long, e: Long): Long = {
-        if (e == 0L) {
-          acc
-        } else if ((e & 1) == 1) {
-          _pow(acc * b, b * b, e >> 1L)
-        } else {
-          _pow(acc, b * b, e >> 1L)
-        }
-      }
-
       (n, exp) match {
         case (b, e) if b == 0L && e <= 0L =>
           throw new IllegalArgumentException(s"zero can only be raised to a positive power (exp=$exp)")
@@ -130,9 +118,20 @@ package object onumber {
         case (b, e) if b == -1L && ((e & 1) == 0) => 1L
         case (b, e) if b == -1L && ((e & 1) == 1) => -1L
         case (_, e) if e < 0L                     => 0L
-        case (b, e)                               => _pow(1L, b, e)
+        case (b, e)                               => pow(1L, b, e)
       }
+    }
+    // scalastyle:on cyclomatic.complexity
 
+    @tailrec
+    private[this] def pow(acc: Long, b: Long, e: Long): Long = {
+      if (e == 0L) {
+        acc
+      } else if ((e & 1) == 1) {
+        pow(acc * b, b * b, e >> 1L)
+      } else {
+        pow(acc, b * b, e >> 1L)
+      }
     }
 
     def pretty: String = pretty()

@@ -86,7 +86,7 @@ package object oslo extends Oslo {
 
   def partialTap[A](a: A)(pf: PartialFunction[A, Unit]): A = a.partialTap(pf)
 
-  implicit class AnyOps[A](val a: A) extends AnyVal {
+  implicit class AnyOps[A](private val a: A) extends AnyVal {
 
     def partialTap(pf: PartialFunction[A, Unit]): A = {
       pf.lift(a)

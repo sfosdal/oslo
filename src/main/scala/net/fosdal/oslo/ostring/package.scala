@@ -8,11 +8,8 @@ package object ostring {
   private[this] val NotNumeric      = "[^0-9]"
   private[this] val NotAlphaNumeric = "[^a-zA-Z0-9]"
 
-  private[this] val ByteFactors =
-    ByteUnits.zipWithIndex
-      .map(t => t._1 -> BytesPerKilobyte.pow(t._2))
-      .toMap
   private[this] val BytePattern = s"([0-9.]+?)\\s*([${ByteUnits.tail.reverse.map(_.head).mkString}]?b)".r
+  private[this] val ByteFactors = ByteUnits.zipWithIndex.toMap.mapValues(BytesPerKilobyte.pow)
 
   implicit class StringOps(private val s: String) extends AnyVal {
 
