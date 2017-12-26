@@ -8,13 +8,11 @@ package object onumber {
   private[this] val DefaultMargin: Double = 0.9
 
   @tailrec
-  private def fact(j: Long, result: Long = 1L): Long = {
-    if (j == 0) {
-      result
-    } else if (j < 0) {
-      throw new IllegalArgumentException("factorials of negative numbers not supported")
-    } else {
-      fact(j - 1, j * result)
+  private def fact(i: Long, result: Long = 1L): Long = {
+    i match {
+      case 0          => result
+      case j if j < 0 => throw new IllegalArgumentException("factorials of negative numbers not supported")
+      case j          => fact(j - 1, j * result)
     }
   }
 
