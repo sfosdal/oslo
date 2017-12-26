@@ -6,12 +6,14 @@ import net.fosdal.oslo.oduration._
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.{implicitConversions, reflectiveCalls}
+import scala.util.Try
 
 // scalastyle:off structural.type
 package object oslo extends Oslo {
 
   val BytesPerKilobyte = 1000
-  val ByteUnits        = Seq("b", "kb", "mb", "gb", "tb", "pb", "eb", "zv", "yb")
+  val ByteUnit         = "b"
+  val ByteUnits        = ByteUnit +: Seq("k", "m", "g", "t", "p", "e", "z", "y").map(_ + ByteUnit)
 
   implicit def NoOpCloser[A](a: A): Unit = ()
 
@@ -21,10 +23,7 @@ package object oslo extends Oslo {
 
   implicit def ShutdownCloser[A <: { def shutdown(): Unit }](a: A): Unit = if (null != a) a.shutdown() // scalastyle:ignore null
 
-  def using[A, B](resource: A)(f: A => B)(implicit closer: A => Unit): B = {
-    try f(resource)
-    finally closer(resource)
-  }
+  def using[A, B](resource: A)(f: A => B)(implicit closer: A => Unit): B = Try(f(resource)).tap(_ => closer(resource)).get
 
   def time[A](block: => A)(f: (A, FiniteDuration) => Unit): A = {
     val start = System.nanoTime()
@@ -103,5 +102,5 @@ package object oslo extends Oslo {
 }
 
 trait Oslo {
-  implicit val DefaultPollUntilConfig: PollUntilConfig = PollUntilConfig(1.second, 1.second)
+  implicit val defaultPollUntilConfig: PollUntilConfig = PollUntilConfig(1.second, 1.second)
 }
