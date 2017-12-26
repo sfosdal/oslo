@@ -2,6 +2,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/net.fosdal/oslo_2.11.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.fosdal%22%20AND%20a%3A%22oslo_2.11%22)
 [![Build Status](https://travis-ci.org/sfosdal/oslo.svg?branch=master)](https://travis-ci.org/sfosdal/oslo)
 [![Coverage Status](https://coveralls.io/repos/github/sfosdal/oslo/badge.svg?branch=master)](https://coveralls.io/github/sfosdal/oslo?branch=master)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4b8e65fb3bc84706bc41e0dd34735b2f)](https://www.codacy.com/app/steve/oslo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sfosdal/oslo&amp;utm_campaign=Badge_Grade)
 
 ### Overview
 Oslo is a tiny Scala library of small but hopefully useful things.
