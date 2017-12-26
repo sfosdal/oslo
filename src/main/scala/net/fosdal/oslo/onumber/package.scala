@@ -91,6 +91,7 @@ package object onumber {
     }
 
     def times(f: => Unit): Unit = {
+
       @tailrec
       def times(j: Long, f: => Unit): Unit = {
         if (j > 0) {
@@ -104,12 +105,24 @@ package object onumber {
       } else {
         times(n, f)
       }
+
     }
 
     def pow(exp: Int): Long = pow(exp.toLong)
 
-    // scalastyle:off cyclomatic.complexity
-    def pow(exp: Long): Long = {
+    def pow(exp: Long): Long = { // scalastyle:off cyclomatic.complexity
+
+      @tailrec
+      def pow(result: Long, base: Long, exp: Long): Long = {
+        if (exp == 0L) {
+          result
+        } else if ((exp & 1) == 1) {
+          pow(result * base, base * base, exp >> 1L)
+        } else {
+          pow(result, base * base, exp >> 1L)
+        }
+      }
+
       (n, exp) match {
         case (b, e) if b == 0L && e <= 0L =>
           throw new IllegalArgumentException(s"zero can only be raised to a positive power (exp=$exp)")
@@ -120,18 +133,7 @@ package object onumber {
         case (_, e) if e < 0L                     => 0L
         case (b, e)                               => pow(1L, b, e)
       }
-    }
-    // scalastyle:on cyclomatic.complexity
 
-    @tailrec
-    private[this] def pow(acc: Long, b: Long, e: Long): Long = {
-      if (e == 0L) {
-        acc
-      } else if ((e & 1) == 1) {
-        pow(acc * b, b * b, e >> 1L)
-      } else {
-        pow(acc, b * b, e >> 1L)
-      }
     }
 
     def pretty: String = pretty()
@@ -157,6 +159,7 @@ package object onumber {
       }
 
       pretty(n, ByteUnits)
+
     }
 
     def pretty: String = pretty()

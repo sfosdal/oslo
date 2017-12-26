@@ -10,7 +10,7 @@ import scala.concurrent.duration._
 // scalastyle:off magic.number
 class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
 
-  private[this] val DefaultPrettyPrecision = 1
+  private[this] val prettyPrecision = 1
 
   "asDuration" must {
 
@@ -125,8 +125,8 @@ class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
     }
     "pretty with precision 1 must be same as default" in {
       forAll(Gen.chooseNum(Long.MinValue + 1L, Long.MaxValue)) { nanos =>
-        nanos.nanoseconds.pretty(DefaultPrettyPrecision) shouldBe nanos.nanoseconds.pretty
-        pretty(nanos.nanoseconds, DefaultPrettyPrecision) shouldBe nanos.nanoseconds.pretty
+        nanos.nanoseconds.pretty(prettyPrecision) shouldBe nanos.nanoseconds.pretty
+        pretty(nanos.nanoseconds, prettyPrecision) shouldBe nanos.nanoseconds.pretty
       }
     }
   }
