@@ -1,6 +1,5 @@
 package net.fosdal.oslo
 
-import net.fosdal.oslo.util.OsloMatchers
 import org.scalacheck.Gen.alphaNumStr
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.{Matchers, WordSpec}
@@ -10,7 +9,7 @@ import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 import scala.language.reflectiveCalls
 
-class OsloSpec extends WordSpec with Matchers with PropertyChecks with OsloMatchers {
+class OsloSpec extends WordSpec with Matchers with PropertyChecks {
 
   "using" must {
 

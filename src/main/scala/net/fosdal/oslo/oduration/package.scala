@@ -9,6 +9,8 @@ import scala.math.signum
 // TODO include more JodaTime conversions with scala.Duration/Interval/java.duration/etc ???
 package object oduration {
 
+  private[this] val DefaultTimeUnits = MILLISECONDS
+
   private[this] val abbr = Map(
     NANOSECONDS  -> "ns",
     MICROSECONDS -> "µs",
@@ -21,7 +23,6 @@ package object oduration {
 
   private[this] def format(duration: Duration, precision: Int): String = {
     duration match {
-      case d: Duration if d == Zero     => "0ms"
       case d: Duration if d == Inf      => "Infinity"
       case d: Duration if d == MinusInf => "-Infinity"
       case d: FiniteDuration =>
@@ -32,11 +33,10 @@ package object oduration {
   }
 
   private[this] def timeUnit(d: FiniteDuration): TimeUnit = {
-    TimeUnit
-      .values()
-      .reverse
+    val units = TimeUnit.values()
+    units.reverse
       .find(d.abs.toUnit(_) >= 1)
-      .get // FIXME given the definition of a FiniteDuration & TimeUnit this is safe
+      .getOrElse(DefaultTimeUnits)
   }
 
   implicit class DurationOps(private val d: Duration) extends AnyVal {

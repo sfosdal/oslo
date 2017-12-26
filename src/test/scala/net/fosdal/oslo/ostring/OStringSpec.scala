@@ -62,17 +62,17 @@ class OStringSpec extends WordSpec with Matchers with PropertyChecks {
     "parse standard formats properly" in {
       "1b".asBytes shouldBe 1L
       "2000b".asBytes shouldBe 2000L
-      "1.5kb".asBytes shouldBe 1500L
-      "2000kb".asBytes shouldBe 2000000L
+      "1.5Kb".asBytes shouldBe 1500L
+      "2000kB".asBytes shouldBe 2000000L
       "1.5mb".asBytes shouldBe 1500000L
       "2000mb".asBytes shouldBe 2000000000L
       "1.5gb".asBytes shouldBe 1500000000L
-      "2000gb".asBytes shouldBe 2000000000000L
+      "2000GB".asBytes shouldBe 2000000000000L
       "1.5tb".asBytes shouldBe 1500000000000L
       "2000tb".asBytes shouldBe 2000000000000000L
       "1.5pb".asBytes shouldBe 1500000000000000L
       "2000pb".asBytes shouldBe 2000000000000000000L
-      "1.5eb".asBytes shouldBe 1500000000000000000L
+      "1.5EB".asBytes shouldBe 1500000000000000000L
       "2000eb".asBytes shouldBe 9223372036854775807L
       "8eb".asBytes shouldBe 8000000000000000000L
     }

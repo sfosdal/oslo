@@ -63,7 +63,7 @@ class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
       56.days.pretty shouldBe "56.0d"
     }
     "format some special durations" in {
-      Zero.pretty shouldBe "0ms"
+      Zero.pretty shouldBe "0.0ms"
       Inf.pretty shouldBe "Infinity"
       MinusInf.pretty shouldBe "-Infinity"
       Undefined.pretty shouldBe "Undefined"
@@ -94,7 +94,7 @@ class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
 
     "convert finite durations to FiniteDurations" in {
       forAll(Gen.chooseNum(Long.MinValue + 1L, Long.MaxValue)) { nanos: Long =>
-        val d: Duration = nanos.nanoseconds
+        val d: Duration        = nanos.nanoseconds
         val fd: FiniteDuration = d.toFiniteDuration
         fd shouldBe nanos.nanoseconds
       }
@@ -118,7 +118,7 @@ class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
 
     "convert finite durations to FiniteDurations" in {
       forAll(Gen.chooseNum(Long.MinValue + 1L, Long.MaxValue)) { nanos: Long =>
-        val d: Duration = nanos.nanoseconds
+        val d: Duration                = nanos.nanoseconds
         val fd: Option[FiniteDuration] = d.toMaybeFiniteDuration
         fd shouldBe Some(nanos.nanoseconds)
       }

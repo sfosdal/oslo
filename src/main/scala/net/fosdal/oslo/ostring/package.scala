@@ -1,6 +1,6 @@
 package net.fosdal.oslo
 
-import scala.math.pow
+import net.fosdal.oslo.onumber._
 
 package object ostring {
 
@@ -10,7 +10,7 @@ package object ostring {
 
   private[this] val ByteFactors =
     ByteUnits.zipWithIndex
-      .map(t => t._1 -> pow(BytesPerKilobyte.toDouble, t._2.toDouble)) // TODO
+      .map(t => t._1 -> BytesPerKilobyte.pow(t._2))
       .toMap
   private[this] val BytePattern = s"([0-9.]+?)\\s*([${ByteUnits.tail.reverse.map(_.head).mkString}]?b)".r
 
@@ -87,7 +87,6 @@ package object ostring {
       *                                         is parsable to a [[scala.Long]]
       * @version 0.3.0
       */
-    // TODO is this case sensitive?
     @throws(classOf[NumberFormatException])
     def asBytes: Long = {
       s.toLowerCase.trim match {
