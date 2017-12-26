@@ -6,6 +6,7 @@ import org.scalatest.{Matchers, WordSpec}
 
 import scala.concurrent.duration._
 
+// scalastyle:off magic.number
 class ODateTimeSpec extends WordSpec with Matchers with PropertyChecks {
 
   "ordering order collections correctly" in new Fixture {
@@ -13,8 +14,8 @@ class ODateTimeSpec extends WordSpec with Matchers with PropertyChecks {
   }
 
   "comparisons" in new Fixture {
-    yesterday < now  shouldBe true
-    yesterday > now  shouldBe false
+    yesterday < now shouldBe true
+    yesterday > now shouldBe false
     sameAsNow <= now shouldBe true
     sameAsNow >= now shouldBe true
   }
@@ -37,8 +38,8 @@ class ODateTimeSpec extends WordSpec with Matchers with PropertyChecks {
   }
 
   trait Fixture {
-    val now       = DateTime.now
-    val sameAsNow = DateTime.now
+    val now       = new DateTime(1970, 5, 28, 18, 0, 0)
+    val sameAsNow = now
     val tomorrow  = now.plusDays(1)
     val yesterday = now.minusDays(1)
   }

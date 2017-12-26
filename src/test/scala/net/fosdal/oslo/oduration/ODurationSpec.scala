@@ -1,6 +1,6 @@
 package net.fosdal.oslo.oduration
 
-import net.fosdal.oslo.util._
+import org.scalacheck.Gen
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.{Matchers, WordSpec}
 
@@ -10,7 +10,26 @@ import scala.concurrent.duration._
 // scalastyle:off magic.number
 class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
 
-  val DefaultPrettyPrecision = 1
+  private[this] val prettyPrecision = 1
+
+  "asDuration" must {
+
+    "convert a org.joda.time.Duration to a scala.concurrent.duration.Duration" in {
+      forAll() { n: Long =>
+        val millis = n / 1000000
+        val d = new org.joda.time.Duration(millis)
+        asDuration(d) shouldBe millis.milliseconds
+      }
+    }
+
+    "convert a org.joda.time.Interval to a scala.concurrent.duration.Duration" in {
+      asDuration(new org.joda.time.Interval(0, 0)) shouldBe 0.milliseconds
+      asDuration(new org.joda.time.Interval(0, 1)) shouldBe 1.milliseconds
+      asDuration(new org.joda.time.Interval(0, 1000)) shouldBe 1000.milliseconds
+      asDuration(new org.joda.time.Interval(0, 2356257)) shouldBe 2356257.milliseconds
+    }
+
+  }
 
   "abs" must {
     "return the absolute value of the duration" in {
@@ -21,9 +40,24 @@ class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
       MinusInf.abs shouldBe Inf
       Undefined.abs shouldBe Undefined
     }
+    "support the static method form" in {
+      abs(2.days) shouldBe 2.days
+      abs(-2.days) shouldBe 2.days
+      abs(Zero) shouldBe 0.days
+      abs(Inf) shouldBe Inf
+      abs(MinusInf) shouldBe Inf
+      abs(Undefined) shouldBe Undefined
+    }
   }
 
   "pretty" must {
+    "support the static method form" in {
+      pretty((-200).nanoseconds) shouldBe "-200.0ns"
+      pretty(2.nanoseconds) shouldBe "2.0ns"
+      pretty(999.nanoseconds) shouldBe "999.0ns"
+      pretty(1001.nanoseconds) shouldBe "1.0µs"
+      pretty(1050.nanoseconds) shouldBe "1.1µs"
+    }
     "format some typical nanoseconds" in {
       (-200).nanoseconds.pretty shouldBe "-200.0ns"
       2.nanoseconds.pretty shouldBe "2.0ns"
@@ -63,7 +97,7 @@ class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
       56.days.pretty shouldBe "56.0d"
     }
     "format some special durations" in {
-      Zero.pretty shouldBe "0ms"
+      Zero.pretty shouldBe "0.0ms"
       Inf.pretty shouldBe "Infinity"
       MinusInf.pretty shouldBe "-Infinity"
       Undefined.pretty shouldBe "Undefined"
@@ -71,6 +105,12 @@ class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
   }
 
   "pretty with precision" must {
+    "support the static method form" in {
+      pretty(2.milliseconds, 2) shouldBe "2.00ms"
+      pretty(999.milliseconds, 2) shouldBe "999.00ms"
+      pretty(1001.milliseconds, 2) shouldBe "1.00s"
+      pretty(1055.milliseconds, 2) shouldBe "1.06s"
+    }
     "format some typical milliseconds" in {
       2.milliseconds.pretty(2) shouldBe "2.00ms"
       999.milliseconds.pretty(2) shouldBe "999.00ms"
@@ -84,34 +124,51 @@ class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
       119.seconds.pretty(0) shouldBe "2m"
     }
     "pretty with precision 1 must be same as default" in {
-      forAll(genDuration) { d =>
-        d.pretty(DefaultPrettyPrecision) shouldBe d.pretty
+      forAll(Gen.chooseNum(Long.MinValue + 1L, Long.MaxValue)) { nanos =>
+        nanos.nanoseconds.pretty(prettyPrecision) shouldBe nanos.nanoseconds.pretty
+        pretty(nanos.nanoseconds, prettyPrecision) shouldBe nanos.nanoseconds.pretty
       }
     }
   }
 
-  "toFiniteDuration" must {
+  "asFiniteDuration" must {
 
     "convert finite durations to FiniteDurations" in {
-      val d: Duration = 5.seconds
-      val fd: FiniteDuration = d.toFiniteDuration
-      fd.toSeconds shouldBe 5
-      Duration.Zero.toFiniteDuration
-      someMethod(fd)
-
-      def someMethod(x: FiniteDuration): Unit = ()
+      forAll(Gen.chooseNum(Long.MinValue + 1L, Long.MaxValue)) { nanos: Long =>
+        val d: Duration = nanos.nanoseconds
+        val fd: FiniteDuration = asFiniteDuration(d)
+        fd shouldBe nanos.nanoseconds
+      }
     }
 
     "throw exceptions when used on a non-finite duration" in {
       an[IllegalArgumentException] should be thrownBy {
-        Duration.Inf.toFiniteDuration
+        asFiniteDuration(Duration.Inf)
       }
       an[IllegalArgumentException] should be thrownBy {
-        Duration.MinusInf.toFiniteDuration
+        asFiniteDuration(Duration.MinusInf)
       }
       an[IllegalArgumentException] should be thrownBy {
-        Duration.Undefined.toFiniteDuration
+        asFiniteDuration(Duration.Undefined)
       }
+    }
+
+  }
+
+  "toFiniteDuration" must {
+
+    "convert finite durations to Option[FiniteDuration]s" in {
+      forAll(Gen.chooseNum(Long.MinValue + 1L, Long.MaxValue)) { nanos: Long =>
+        val d: Duration = nanos.nanoseconds
+        val fd: Option[FiniteDuration] = d.toFiniteDuration
+        fd shouldBe Some(nanos.nanoseconds)
+      }
+    }
+
+    "return Nones used on a non-finite duration" in {
+      Duration.Inf.toFiniteDuration shouldBe None
+      Duration.MinusInf.toFiniteDuration shouldBe None
+      Duration.Undefined.toFiniteDuration shouldBe None
     }
 
   }

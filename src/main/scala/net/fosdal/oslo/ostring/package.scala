@@ -1,19 +1,17 @@
 package net.fosdal.oslo
 
-import scala.math.pow
+import net.fosdal.oslo.onumber._
 
 package object ostring {
 
-  private[this] val NotAlpha = "[^a-zA-Z]"
-  private[this] val NotNumeric = "[^0-9]"
+  private[this] val NotAlpha        = "[^a-zA-Z]"
+  private[this] val NotNumeric      = "[^0-9]"
   private[this] val NotAlphaNumeric = "[^a-zA-Z0-9]"
 
-  private[this] val ByteFactors = Seq("b", "kb", "mb", "gb", "tb", "pb", "eb").zipWithIndex
-    .map(t => t._1 -> pow(1024D, t._2.toDouble))
-    .toMap
-  private[this] val BytePattern = "([0-9.]+?)\\s*([yzeptgmk]?b)".r
+  private[this] val BytePattern = s"([0-9.]+?)\\s*([${ByteUnits.tail.reverse.map(_.head).mkString}]?b)".r
+  private[this] val ByteFactors = ByteUnits.zipWithIndex.toMap.mapValues(BytesPerKilobyte.pow)
 
-  implicit class StringOps(val s: String) extends AnyVal {
+  implicit class StringOps(private val s: String) extends AnyVal {
 
     /** removes all non-alpha characters from the [[scala.Predef.String]] (non-`[a-zA-Z]`)
       *

@@ -10,13 +10,16 @@ import scala.language.{implicitConversions, reflectiveCalls}
 // scalastyle:off structural.type
 package object oslo extends Oslo {
 
-  implicit def NoOpCloser[A](a: A): Unit = {
-    val _ = a
-  }
+  val BytesPerKilobyte = 1000
+  val ByteUnits        = Seq("b", "kb", "mb", "gb", "tb", "pb", "eb", "zv", "yb")
 
-  implicit def CloseCloser[A <: { def close(): Unit }](a: A): Unit = a.close()
+  implicit def NoOpCloser[A](a: A): Unit = ()
 
-  implicit def StopCloser[A <: { def stop(): Unit }](a: A): Unit = a.stop()
+  implicit def CloseCloser[A <: { def close(): Unit }](a: A): Unit = if (null != a) a.close() // scalastyle:ignore null
+
+  implicit def StopCloser[A <: { def stop(): Unit }](a: A): Unit = if (null != a) a.stop() // scalastyle:ignore null
+
+  implicit def ShutdownCloser[A <: { def shutdown(): Unit }](a: A): Unit = if (null != a) a.shutdown() // scalastyle:ignore null
 
   def using[A, B](resource: A)(f: A => B)(implicit closer: A => Unit): B = {
     try f(resource)
@@ -79,14 +82,18 @@ package object oslo extends Oslo {
     pollUntil(config)(block)
   }
 
-  implicit class AnyOps[A](val a: A) extends AnyVal {
+  def tap[A](a: A)(f: A => Unit): A = a.tap(f)
 
-    def partialTap(pf: PartialFunction[A, _]): A = {
+  def partialTap[A](a: A)(pf: PartialFunction[A, Unit]): A = a.partialTap(pf)
+
+  implicit class AnyOps[A](private val a: A) extends AnyVal {
+
+    def partialTap(pf: PartialFunction[A, Unit]): A = {
       pf.lift(a)
       a
     }
 
-    def tap(f: Function[A, _]): A = {
+    def tap(f: A => Unit): A = {
       f(a)
       a
     }

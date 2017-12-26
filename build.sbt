@@ -40,11 +40,11 @@ scalastyleFailOnError := true
 (scalastyleConfig in Test) := baseDirectory.value / "scalastyle-test-config.xml"
 
 libraryDependencies ++= Seq(
-  "com.opencsv"                % "opencsv"        % "4.0",
+  "com.opencsv"                %  "opencsv"       % "4.1",
   "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2",
-  "joda-time"                  % "joda-time"      % "2.9.9",
+  "joda-time"                  %  "joda-time"     % "2.9.9",
   "org.scalacheck"             %% "scalacheck"    % "1.13.5" % Test,
-  "org.scalatest"              %% "scalatest"     % "3.0.4" % Test
+  "org.scalatest"              %% "scalatest"     % "3.0.4"  % Test
 )
 
 dependencyUpdatesFilter -= moduleFilter(organization = "org.scala-lang")
@@ -60,10 +60,9 @@ scalacOptions ++= Seq(
   "-Yno-adapted-args",
   "-Ywarn-dead-code",
   "-Ywarn-numeric-widen",
-  "-Ywarn-unused"
+  "-Ywarn-unused",
+  "-Ywarn-value-discard"
 )
 
-scalacOptions in (Compile, doc) ++= Seq("-Ywarn-value-discard")
-
-coverageMinimum := 90
+coverageMinimum := 100
 coverageFailOnMinimum := true

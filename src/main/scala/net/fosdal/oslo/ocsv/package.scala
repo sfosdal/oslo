@@ -30,9 +30,9 @@ package object ocsv extends Ocsv with LazyLogging {
       .map(file => readContents(new FileReader(file), csvParser))
       .reduceLeftOption(_ ++ _)
       .getOrElse(Seq.empty[Seq[String]]) partialTap {
-      case recs: Seq[Seq[String]] if recs.nonEmpty =>
+      case recs if recs.nonEmpty =>
         val len = recs.head.length
-        if (recs.tail.exists(_.length != len)) {
+        if (recs.tail.exists(_.lengthCompare(len) != 0)) {
           throw new IllegalArgumentException(s"found records with varying field count")
         }
     }
@@ -80,17 +80,17 @@ package object ocsv extends Ocsv with LazyLogging {
         case line if !removeEmptyRecords || line.length > 1 || line.head.nonEmpty =>
           line.toSeq
       } partialTap {
-      case lines: Seq[Seq[String]] if lines.nonEmpty =>
+      case lines if lines.nonEmpty =>
         if (strictRecordLength) {
           val len = lines.head.length
-          if (lines.tail.exists(_.length != len)) {
+          if (lines.tail.exists(_.lengthCompare(len) != 0)) {
             throw new IllegalArgumentException(s"found records with varying field count")
           }
         }
     }
   }
 
-  implicit class CSVParserOps(val p: CSVParser) extends AnyVal {
+  implicit class CSVParserOps(private val p: CSVParser) extends AnyVal {
 
     private[this] def builder =
       new CSVParserBuilder()
@@ -110,8 +110,4 @@ package object ocsv extends Ocsv with LazyLogging {
 
   }
 
-}
-
-trait Ocsv {
-  implicit val csvParser: CSVParser = new CSVParserBuilder().withIgnoreLeadingWhiteSpace(true).build()
 }
