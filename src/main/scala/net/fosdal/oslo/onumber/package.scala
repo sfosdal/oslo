@@ -19,9 +19,37 @@ package object onumber {
     }
   }
 
+  def factorial(i: Int): Long = i.factorial
+
+  def factorial(i: Long): Long = i.factorial
+
+  def choose(i: Int, k: Int): Long = i.choose(k)
+
+  def choose(i: Long, k: Int): Long = i.choose(k)
+
+  def choose(i: Int, k: Long): Long = i.choose(k)
+
+  def choose(i: Long, k: Long): Long = i.choose(k)
+
+  def times(i: Int)(f: => Unit): Unit = i.times(f)
+
+  def times(i: Long)(f: => Unit): Unit = i.times(f)
+
+  def pow(i: Int, exp: Int): Long = i.pow(exp)
+
+  def pow(i: Long, exp: Int): Long = i.pow(exp)
+
+  def pow(i: Long, exp: Long): Long = i.pow(exp)
+
+  def pretty(i: Int): String = i.pretty
+
+  def pretty(i: Long): String = i.pretty
+
   implicit class IntOps(private val n: Int) extends AnyVal {
 
     def factorial: Long = fact(n.toLong)
+
+    def choose(k: Long): Long = n.toLong.choose(k)
 
     def choose(k: Int): Long = {
       if (k > n) {
@@ -39,19 +67,21 @@ package object onumber {
       }
     }
 
-    def pretty(factor: Int = BytesPerKilobyte, precision: Int = DefaultPrecision, margin: Double = DefaultMargin): String = {
-      n.toDouble.pretty(factor, precision, margin)
-    }
+    def pow(exp: Int): Long = n.toLong.pow(exp)
 
     def pretty: String = pretty()
 
-    def pow(exp: Int): Long = n.toLong.pow(exp)
+    def pretty(factor: Int = BytesPerKilobyte, precision: Int = DefaultPrecision, margin: Double = DefaultMargin): String = {
+      n.toDouble.pretty(factor, precision, margin)
+    }
 
   }
 
   implicit class LongOps(private val n: Long) extends AnyVal {
 
     def factorial: Long = fact(n)
+
+    def choose(k: Int): Long = choose(k.toLong)
 
     def choose(k: Long): Long = {
       if (k > n) {
@@ -76,12 +106,6 @@ package object onumber {
         times(n, f)
       }
     }
-
-    def pretty(factor: Int = BytesPerKilobyte, precision: Int = DefaultPrecision, margin: Double = DefaultMargin): String = {
-      n.toDouble.pretty(factor, precision, margin)
-    }
-
-    def pretty: String = pretty()
 
     def pow(exp: Int): Long = pow(exp.toLong)
 
@@ -109,6 +133,12 @@ package object onumber {
         case (b, e)                               => _pow(1L, b, e)
       }
 
+    }
+
+    def pretty: String = pretty()
+
+    def pretty(factor: Int = BytesPerKilobyte, precision: Int = DefaultPrecision, margin: Double = DefaultMargin): String = {
+      n.toDouble.pretty(factor, precision, margin)
     }
 
   }
