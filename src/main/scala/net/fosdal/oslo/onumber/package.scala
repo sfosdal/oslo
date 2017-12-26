@@ -114,12 +114,10 @@ package object onumber {
 
       @tailrec
       def pow(result: Long, base: Long, exp: Long): Long = {
-        if (exp == 0L) {
-          result
-        } else if ((exp & 1) == 1) {
-          pow(result * base, base * base, exp >> 1L)
-        } else {
-          pow(result, base * base, exp >> 1L)
+        exp match {
+          case 0L                  => result
+          case e if (exp & 1) == 1 => pow(result * base, base * base, e >> 1L)
+          case e                   => pow(result, base * base, e >> 1L)
         }
       }
 
