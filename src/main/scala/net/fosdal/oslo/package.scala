@@ -86,18 +86,18 @@ package object oslo extends Oslo {
     pollUntil(config)(block)
   }
 
-  def tap[A](a: A)(f: A => Unit): A = a.tap(f)
+  def tap[A](a: A)(f: A => Any): A = a.tap(f)
 
-  def partialTap[A](a: A)(pf: PartialFunction[A, Unit]): A = a.partialTap(pf)
+  def partialTap[A](a: A)(pf: PartialFunction[A, Any]): A = a.partialTap(pf)
 
   implicit class AnyOps[A](private val a: A) extends AnyVal {
 
-    def partialTap(pf: PartialFunction[A, Unit]): A = {
+    def partialTap(pf: PartialFunction[A, Any]): A = {
       pf.lift(a)
       a
     }
 
-    def tap(f: A => Unit): A = {
+    def tap(f: A => Any): A = {
       f(a)
       a
     }
