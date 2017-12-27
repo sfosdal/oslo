@@ -6,7 +6,7 @@ import net.fosdal.oslo.oduration._
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.{implicitConversions, reflectiveCalls}
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 // scalastyle:off structural.type
 package object oslo extends Oslo {
@@ -23,7 +23,12 @@ package object oslo extends Oslo {
 
   implicit def ShutdownCloser[A <: { def shutdown(): Unit }](a: A): Unit = if (null != a) a.shutdown() // scalastyle:ignore null
 
-  def using[A, B](resource: A)(f: A => B)(implicit closer: A => Unit): B = Try(f(resource)).tap(_ => closer(resource)).get
+  def using[A, B](resource: A)(f: A => B)(implicit closer: A => Unit): B = {
+    Try(f(resource)).tap(_ => closer(resource)) match {
+      case Success(b) => b
+      case Failure(e) => throw e
+    }
+  }
 
   def time[A](block: => A)(f: (A, FiniteDuration) => Unit): A = {
     val start = System.nanoTime()
