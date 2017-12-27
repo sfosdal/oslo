@@ -20,6 +20,23 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks {
       }
     }
 
+    "throw when the using clause throws" in new UsingFixture {
+      (the[Exception] thrownBy {
+        using(new BadUseable("died on creation")) { _ =>
+          throw new Exception("got a little furthe than it should have")
+        }
+      } should have).message("died on creation")
+    }
+
+    "throw when the closing throws" in new UsingFixture {
+      val closable = new UsingClosable
+      (the[Exception] thrownBy {
+        using(closable) { _ =>
+          throw new Exception("this is the message")
+        }
+      } should have).message("this is the message")
+    }
+
     "close the Closable being used" in new UsingFixture {
       val closable = new UsingClosable
       closable should not be 'closed
@@ -165,7 +182,7 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks {
 
     "use Short millis to sleep" in {
       val millis = 2000.toShort
-      val start = System.nanoTime()
+      val start  = System.nanoTime()
       sleep(millis)
       val actual = (System.nanoTime() - start).nanos.toMillis
       actual.toShort shouldBe 2000.toShort +- 100.toShort
@@ -173,7 +190,7 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks {
 
     "use Int millis to sleep" in {
       val millis = 2000
-      val start = System.nanoTime()
+      val start  = System.nanoTime()
       sleep(millis)
       val actual = (System.nanoTime() - start).nanos.toMillis
       actual.toInt shouldBe 2000 +- 100
@@ -181,7 +198,7 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks {
 
     "use Long millis to sleep" in {
       val millis = 2000L
-      val start = System.nanoTime()
+      val start  = System.nanoTime()
       sleep(millis)
       val actual = (System.nanoTime() - start).nanos.toMillis
       actual shouldBe 2000L +- 100L
@@ -192,7 +209,7 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks {
   "pollingUntil" must {
 
     "periodically poll its block until the condition is met" in new UntilFixture {
-      val limit = 3
+      val limit   = 3
       val mutable = new UntilMutable(limit)
 
       mutable.i shouldBe 0
@@ -205,7 +222,7 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks {
     }
 
     "be configurable with config class" in new UntilFixture {
-      val limit = 3
+      val limit   = 3
       val mutable = new UntilMutable(limit)
 
       mutable.i shouldBe 0
@@ -222,7 +239,7 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks {
     }
 
     "be configurable with plain values" in new UntilFixture {
-      val limit = 3
+      val limit   = 3
       val mutable = new UntilMutable(limit)
 
       mutable.i shouldBe 0
@@ -371,6 +388,17 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks {
   }
 
   trait UsingFixture {
+
+    class BadUseable(private val msg: String) {
+      def close(): Unit = ()
+
+      msg match {
+        case m if m.isEmpty  => throw new Exception(m)
+        case m if m.nonEmpty => throw new Exception(m)
+        case _               => this
+      }
+
+    }
 
     class UsingNoOpable
 
