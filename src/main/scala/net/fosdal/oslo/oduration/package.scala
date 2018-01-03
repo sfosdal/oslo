@@ -5,25 +5,24 @@ import java.util.concurrent.TimeUnit
 import scala.concurrent.duration.Duration._
 import scala.concurrent.duration._
 import scala.language.implicitConversions
-import scala.math.signum
 
 package object oduration {
 
   private[this] val DefaultTimeUnits = MILLISECONDS
 
   private[this] val abbr = Map(
-    NANOSECONDS -> "ns",
+    NANOSECONDS  -> "ns",
     MICROSECONDS -> "µs",
     MILLISECONDS -> "ms",
-    SECONDS -> "s",
-    MINUTES -> "m",
-    HOURS -> "h",
-    DAYS -> "d"
+    SECONDS      -> "s",
+    MINUTES      -> "m",
+    HOURS        -> "h",
+    DAYS         -> "d"
   )
 
   private[this] def format(duration: Duration, precision: Int): String = {
     duration match {
-      case d: Duration if d == Inf => "Infinity"
+      case d: Duration if d == Inf      => "Infinity"
       case d: Duration if d == MinusInf => "-Infinity"
       case d: FiniteDuration =>
         val u = timeUnit(d)
@@ -39,7 +38,29 @@ package object oduration {
       .getOrElse(DefaultTimeUnits)
   }
 
+  private[this] def gen(d: Duration, x: FiniteDuration, f: Double => Long): Duration = {
+    d match {
+      case _: FiniteDuration =>
+        x match {
+          case x1 if x1 < Zero =>
+            throw new IllegalArgumentException(s"does not support negative durations ($d)")
+          case _ =>
+            val n = x.toNanos
+            (f(d.toNanos.toDouble / n) * n).nanoseconds.toCoarsest
+        }
+      case d1 => d1
+    }
+  }
+
   def abs(d: Duration): Duration = d.abs
+
+  def signum(d: Duration): Long = d.signum
+
+  def floor(d: Duration, x: FiniteDuration): Duration = d.floor(x)
+
+  def ceil(d: Duration, x: FiniteDuration): Duration = d.ceil(x)
+
+  def round(d: Duration, x: FiniteDuration): Duration = d.round(x)
 
   def pretty(d: Duration): String = d.pretty
 
@@ -52,7 +73,7 @@ package object oduration {
   implicit def asFiniteDuration(d: Duration): FiniteDuration = {
     d match {
       case fd: FiniteDuration => fd
-      case _ => throw new IllegalArgumentException(s"""unable to convert $d to FiniteDuration""")
+      case _                  => throw new IllegalArgumentException(s"""unable to convert $d to FiniteDuration""")
     }
   }
 
@@ -64,13 +85,28 @@ package object oduration {
 
     def abs: Duration = {
       d match {
-        case d1: FiniteDuration => d1 * signum(d1.toNanos)
-        case Inf | MinusInf => Inf
-        case _ => Undefined
+        case d1: FiniteDuration => d1 * math.signum(d1.toNanos)
+        case Inf | MinusInf     => Inf
+        case _                  => Undefined
       }
     }
 
-    def toFiniteDuration: Option[FiniteDuration] = Some(d).collect { case d: FiniteDuration => d }
+    def signum: Long = math.signum(d.toNanos)
+
+    def floor(x: FiniteDuration): Duration = gen(d, x, math.floor(_).toLong)
+
+    def ceil(x: FiniteDuration): Duration = gen(d, x, math.ceil(_).toLong)
+
+    def round(x: FiniteDuration): Duration = gen(d, x, math.round)
+
+    def toFiniteDuration: FiniteDuration = asFiniteDuration(d)
+
+    def toMaybeFiniteDuration: Option[FiniteDuration] = {
+      d match {
+        case fd: FiniteDuration => Some(fd)
+        case _                  => None
+      }
+    }
 
   }
 
