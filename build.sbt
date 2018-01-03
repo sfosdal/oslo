@@ -8,7 +8,7 @@ scalaVersion := "2.11.11"
 
 fork := true
 
-crossScalaVersions := Seq("2.12.2", "2.11.11")
+crossScalaVersions := Seq("2.12.2", "2.11.12")
 
 publishArtifact in Test := false
 

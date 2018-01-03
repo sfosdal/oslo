@@ -50,6 +50,81 @@ class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
     }
   }
 
+  "signum" in {
+    2.day.signum shouldBe 1
+    1.day.signum shouldBe 1
+    0.day.signum shouldBe 0
+    -1.day.signum shouldBe -1
+    -2.day.signum shouldBe -1
+    signum(2.day) shouldBe 1
+  }
+
+  "floor" in {
+    an[IllegalArgumentException] should be thrownBy {
+      1.day.floor(-5.days)
+    }
+
+    -6.days.floor(5.days) shouldBe -10.days
+    -5.days.floor(5.days) shouldBe -5.days
+    -4.days.floor(5.days) shouldBe -5.days
+
+    -1.days.floor(5.days) shouldBe -5.days
+    0.days.floor(5.days) shouldBe 0.days
+    1.day.floor(5.days) shouldBe 0.days
+
+    4.days.floor(5.days) shouldBe 0.days
+    5.days.floor(5.days) shouldBe 5.days
+    6.days.floor(5.days) shouldBe 5.days
+
+    9.days.floor(5.days) shouldBe 5.days
+    10.days.floor(5.days) shouldBe 10.days
+    11.days.floor(5.days) shouldBe 10.days
+
+    floor(11.days, 5.days) shouldBe 10.days
+  }
+
+  "ceil" in {
+    an[IllegalArgumentException] should be thrownBy {
+      1.day.ceil(-5.days)
+    }
+
+    -6.days.ceil(5.days) shouldBe -5.days
+    -5.days.ceil(5.days) shouldBe -5.days
+    -4.day.ceil(5.days) shouldBe 0.days
+
+    -1.days.ceil(5.days) shouldBe 0.days
+    0.days.ceil(5.days) shouldBe 0.days
+    1.day.ceil(5.days) shouldBe 5.days
+
+    4.days.ceil(5.days) shouldBe 5.days
+    5.days.ceil(5.days) shouldBe 5.days
+    6.days.ceil(5.days) shouldBe 10.days
+
+    9.days.ceil(5.days) shouldBe 10.days
+    10.days.ceil(5.days) shouldBe 10.days
+    11.days.ceil(5.days) shouldBe 15.days
+
+    ceil(11.days, 5.days) shouldBe 15.days
+
+  }
+
+  "round" in {
+    an[IllegalArgumentException] should be thrownBy {
+      1.day.round(-5.days)
+    }
+    -3.days.round(5.days) shouldBe -5.days
+    -2.days.round(5.days) shouldBe 0.days
+
+    2.days.round(5.days) shouldBe 0.days
+    3.days.round(5.days) shouldBe 5.days
+
+    7.days.round(5.days) shouldBe 5.days
+    8.days.round(5.days) shouldBe 10.days
+
+    round(8.days, 5.days) shouldBe 10.days
+
+  }
+
   "pretty" must {
     "support the static method form" in {
       pretty((-200).nanoseconds) shouldBe "-200.0ns"
@@ -160,15 +235,36 @@ class ODurationSpec extends WordSpec with Matchers with PropertyChecks {
     "convert finite durations to Option[FiniteDuration]s" in {
       forAll(Gen.chooseNum(Long.MinValue + 1L, Long.MaxValue)) { nanos: Long =>
         val d: Duration = nanos.nanoseconds
-        val fd: Option[FiniteDuration] = d.toFiniteDuration
-        fd shouldBe Some(nanos.nanoseconds)
+        d.toFiniteDuration shouldBe d
       }
     }
 
-    "return Nones used on a non-finite duration" in {
-      Duration.Inf.toFiniteDuration shouldBe None
-      Duration.MinusInf.toFiniteDuration shouldBe None
-      Duration.Undefined.toFiniteDuration shouldBe None
+    "exceptions should be thrown when used on a non-finite duration" in {
+      an[IllegalArgumentException] should be thrownBy {
+        asFiniteDuration(Duration.Inf)
+      }
+      an[IllegalArgumentException] should be thrownBy {
+        Duration.MinusInf.toFiniteDuration
+      }
+      an[IllegalArgumentException] should be thrownBy {
+        Duration.Undefined.toFiniteDuration
+      }
+    }
+
+  }
+  "toMaybeFiniteDuration" must {
+
+    "convert finite durations to Option[FiniteDuration]s" in {
+      forAll(Gen.chooseNum(Long.MinValue + 1L, Long.MaxValue)) { nanos: Long =>
+        val d: Duration = nanos.nanoseconds
+        d.toMaybeFiniteDuration shouldBe Some(d)
+      }
+    }
+
+    "exceptions should be thrown when used on a non-finite duration" in {
+      Duration.Inf.toMaybeFiniteDuration shouldBe None
+      Duration.MinusInf.toMaybeFiniteDuration shouldBe None
+      Duration.Undefined.toMaybeFiniteDuration shouldBe None
     }
 
   }
