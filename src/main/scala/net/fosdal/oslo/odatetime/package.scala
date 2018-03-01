@@ -2,7 +2,7 @@ package net.fosdal.oslo
 
 import net.fosdal.oslo.oduration._
 import org.joda.time.DateTimeZone._
-import org.joda.time.{DateTime, DateTimeZone}
+import org.joda.time.{DateTime, DateTimeZone, LocalDate}
 
 import scala.concurrent.duration.Duration.Zero
 import scala.concurrent.duration._
@@ -29,7 +29,13 @@ package object odatetime {
 
   def round(dateTime: DateTime, x: FiniteDuration): DateTime = gen(dateTime, x, math.round(_).toDouble)
 
-  implicit val ordering: Ordering[DateTime] = Ordering.by(_.getMillis)
+  implicit val orderingDateTime: Ordering[DateTime] = Ordering.by(_.getMillis)
+
+  implicit val orderingLocalDate: Ordering[LocalDate] = Ordering.by(d => (d.getYear, d.getDayOfYear))
+
+  implicit class LocalDateOps(private val localDate: LocalDate) extends AnyVal with Ordered[LocalDate] {
+    override def compare(that: LocalDate): Int = Ordering[LocalDate].compare(localDate, that)
+  }
 
   implicit class DateTimeOps(private val dateTime: DateTime) extends AnyVal with Ordered[DateTime] {
 

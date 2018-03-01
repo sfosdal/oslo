@@ -5,11 +5,19 @@ import scala.util.Try
 
 package object ofile {
 
+  /**
+    * alternatively uses [[fileContents()]] or [[resourceContents()]] to read the source and return the contents
+    * of the file.
+    *
+    * @version 0.3.0
+    * @param source the path to the file. see [[java.io.File]] for additional details
+    * @return
+    */
   def contents(source: String): String = Try(resourceContents(source)).getOrElse(fileContents(source))
 
   /**
-    * Uses scala.io.Source.fromFile to read the source and return the contents. It's very thin wrapper, little
-    * more than a nanofilm. Present mostly for completeness.
+    * Uses scala.io.Source.fromFile to read the source and return the contents. A very thin wrapper, present
+    * mostly for completeness.
     *
     * @version 0.3.0
     * @param filePath the path to the file. see [[java.io.File]] for additional details

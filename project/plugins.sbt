@@ -12,5 +12,4 @@ addSbtPlugin("org.scoverage"                     % "sbt-coveralls"          % "1
 addSbtPlugin("org.scoverage"                     % "sbt-scoverage"          % "1.5.1")
 addSbtPlugin("org.xerial.sbt"                    % "sbt-sonatype"           % "2.0")
 
-// see: https://github.com/sbt/sbt-git#known-issues
 libraryDependencies += "org.slf4j" % "slf4j-nop" % "1.7.25"

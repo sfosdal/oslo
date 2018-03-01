@@ -1,7 +1,7 @@
 package net.fosdal.oslo.odatetime
 
 import org.joda.time.DateTimeZone.UTC
-import org.joda.time.{DateTime, DateTimeZone}
+import org.joda.time.{DateTime, DateTimeZone, LocalDate}
 import org.scalacheck.Gen.chooseNum
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.{Matchers, WordSpec}
@@ -11,8 +11,24 @@ import scala.concurrent.duration._
 // scalastyle:off magic.number
 class ODateTimeSpec extends WordSpec with Matchers with PropertyChecks {
 
-  "ordering order collections correctly" in new Fixture {
-    Seq(now, tomorrow, yesterday).sorted(ordering) shouldBe Seq(yesterday, now, tomorrow)
+  "LocalDateOps" in new Fixture {
+    val d1 = LocalDate.now
+    val d2 = d1.plusDays(2)
+    d1 > d2 shouldBe false
+  }
+
+  "DateTimeOps" in new Fixture {
+    tomorrow > yesterday shouldBe true
+  }
+
+  "orderingDateTime order collections correctly" in new Fixture {
+    Seq(now, tomorrow, yesterday).sorted(orderingDateTime) shouldBe Seq(yesterday, now, tomorrow)
+  }
+
+  "orderingLocalDate order collections correctly" in new Fixture {
+    val input    = Seq(now, tomorrow, yesterday).map(_.toLocalDate)
+    val expected = Seq(yesterday, now, tomorrow).map(_.toLocalDate)
+    input.sorted(orderingLocalDate) shouldBe expected
   }
 
   "floor" must {

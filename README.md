@@ -39,6 +39,12 @@ TBD
 
 #### net.fosdal.oslo.ofile._
 TBD
+```scala
+  def resourceContents(resourcePath: String): String = {
+  def fileContents(filePath: String): String = Source.fromFile(filePath).mkString
+  def contents(source: String): String = Try(resourceContents(source)).getOrElse(fileContents(source))
+```
+
 
 #### net.fosdal.oslo.onumber._
 TBD
