@@ -1,26 +1,18 @@
 # Oslo
-[![Maven Central](https://img.shields.io/maven-central/v/net.fosdal/oslo_2.11.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.fosdal%22%20AND%20a%3A%22oslo_2.11%22)
+[![Maven Central](https://img.shields.io/maven-central/v/net.fosdal/oslo_2.12.svg)](http://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22net.fosdal%22%20AND%20a%3A%22oslo_2.11%22)
 [![Build Status](https://travis-ci.org/sfosdal/oslo.svg?branch=master)](https://travis-ci.org/sfosdal/oslo)
 [![Coverage Status](https://coveralls.io/repos/github/sfosdal/oslo/badge.svg?branch=master)](https://coveralls.io/github/sfosdal/oslo?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4b8e65fb3bc84706bc41e0dd34735b2f)](https://www.codacy.com/app/steve/oslo?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=sfosdal/oslo&amp;utm_campaign=Badge_Grade)
-[![Waffle.io - Columns and their card count](https://badge.waffle.io/sfosdal/oslo.svg?columns=all)](https://waffle.io/sfosdal/oslo)
 
 ### Overview
 Oslo is a tiny Scala library of small but hopefully useful things.
 
 ### Getting Started
-Oslo is currently available for Scala 2.11.
-
-2.12 support is comming soon. (see: [#4 - Cross Build for 2.12](/sfosdal/oslo/issues/4))
-
-
 Using SBT, add the following to your `build.sbt` file (see maven badge for latest version)
 
 ```scala
 libraryDependencies += "net.fosdal" %% "oslo" % "<version>"
 ```
-
-Release notes for Oslo are available in [CHANGES.md](CHANGES.md).
 
 ### User Guide
 Most of Oslo is organized around package objects. In general, this means you need to import the package object and the methods are then available for use. Here is a list of the package objects and examples on using them:
