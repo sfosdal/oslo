@@ -23,7 +23,7 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks {
     "throw when the using clause throws" in new UsingFixture {
       (the[Exception] thrownBy {
         using(new BadUseable("died on creation")) { _ =>
-          throw new Exception("got a little furthe than it should have")
+          throw new Exception("got a little further than it should have")
         }
       } should have).message("died on creation")
     }
