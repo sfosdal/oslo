@@ -18,7 +18,7 @@ libraryDependencies ++= Seq(
 //
 releaseCrossBuild := true
 crossScalaVersions := Seq("2.12.4", "2.11.12")
-
+releasePublishArtifactsAction := PgpKeys.publishSigned.value
 publishArtifact in Test := false
 
 publishTo := Some(
