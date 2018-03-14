@@ -32,8 +32,6 @@ publishMavenStyle := true
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 releaseProcess += releaseStepCommand("sonatypeRelease")
 releaseCrossBuild := true
-releaseTagComment := s"$name ${version.value}"
-releaseCommitMessage := s"Bump version to ${version.value}"
 publishTo := Some(
   if (isSnapshot.value) {
     Opts.resolver.sonatypeSnapshots
