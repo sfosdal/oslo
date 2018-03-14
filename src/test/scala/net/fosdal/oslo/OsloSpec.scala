@@ -95,16 +95,6 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks {
       }
     }
 
-    "do do nothing with the NoOpable being used" in new UsingFixture {
-      val noOpable = new UsingNoOpable
-      using(noOpable) { _ =>
-        ()
-      }
-      using(noOpable) { _ =>
-        ()
-      }
-    }
-
   }
 
   "time" must {
@@ -399,8 +389,6 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks {
       }
 
     }
-
-    class UsingNoOpable
 
     class UsingClosable {
       var isClosed = false
