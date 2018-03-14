@@ -28,26 +28,19 @@ scalastyleFailOnError := true
 // Release Configuration
 //
 crossScalaVersions := Seq("2.12.4", "2.11.12")
-
 publishMavenStyle := true
-publishTo := Some(sonatypeDefaultResolver.value)
 releasePublishArtifactsAction := PgpKeys.publishSigned.value
 releaseProcess += releaseStepCommand("sonatypeRelease")
 releaseCrossBuild := true
 releaseTagComment := s"$name ${version.value}"
 releaseCommitMessage := s"Bump version to ${version.value}"
-
-//releasePublishArtifactsAction := PgpKeys.publishSigned.value
-
-//publishArtifact in Test := false
-
-//publishTo := Some(
-//  if (isSnapshot.value) {
-//    Opts.resolver.sonatypeSnapshots
-//  } else {
-//    Opts.resolver.sonatypeStaging
-//  }
-//)
+publishTo := Some(
+  if (isSnapshot.value) {
+    Opts.resolver.sonatypeSnapshots
+  } else {
+    Opts.resolver.sonatypeStaging
+  }
+)
 
 //
 // Scalac Flags (selections from: https://tpolecat.github.io/2017/04/25/scalac-flags.html
