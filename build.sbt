@@ -1,5 +1,3 @@
-import sbtrelease.ReleaseStateTransformations._
-
 name := "oslo"
 
 organization := "net.fosdal"
@@ -20,7 +18,7 @@ libraryDependencies ++= Seq(
 //
 releaseCrossBuild := true
 crossScalaVersions := Seq("2.12.4", "2.11.12")
-
+releasePublishArtifactsAction := PgpKeys.publishSigned.value
 publishArtifact in Test := false
 
 publishTo := Some(
@@ -29,21 +27,6 @@ publishTo := Some(
   } else {
     Opts.resolver.sonatypeStaging
   }
-)
-
-releaseProcess := Seq[ReleaseStep](
-  checkSnapshotDependencies,
-  inquireVersions,
-  runClean,
-  runTest,
-  setReleaseVersion,
-  commitReleaseVersion,
-  tagRelease,
-//  ReleaseStep(action = Command.process("publishSigned", _), enableCrossBuild = true),
-  setNextVersion,
-  commitNextVersion,
-//  ReleaseStep(action = Command.process("sonatypeReleaseAll", _), enableCrossBuild = true),
-  pushChanges
 )
 
 //
