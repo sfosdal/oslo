@@ -15,8 +15,6 @@ package object oslo extends Oslo {
   val ByteUnit         = "b"
   val ByteUnits        = ByteUnit +: Seq("k", "m", "g", "t", "p", "e", "z", "y").map(_ + ByteUnit)
 
-  implicit def NoOpCloser[A](a: A): Unit = ()
-
   implicit def CloseCloser[A <: { def close(): Unit }](a: A): Unit = if (null != a) a.close() // scalastyle:ignore null
 
   implicit def StopCloser[A <: { def stop(): Unit }](a: A): Unit = if (null != a) a.stop() // scalastyle:ignore null
