@@ -1,6 +1,7 @@
 package net.fosdal.oslo
 
 import org.scalacheck.Gen.alphaNumStr
+import org.scalamock.scalatest.MockFactory
 import org.scalatest.prop.PropertyChecks
 import org.scalatest.{Matchers, WordSpec}
 
@@ -9,9 +10,27 @@ import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 import scala.language.reflectiveCalls
 
-class OsloSpec extends WordSpec with Matchers with PropertyChecks {
+class OsloSpec extends WordSpec with Matchers with PropertyChecks with MockFactory {
 
   "using" must {
+
+    "handle exceptions in closing" in new UsingFixture {
+      (the[Exception] thrownBy {
+        using(new UncloseableUseable) { c =>
+          ()
+        }
+      } should have).message("will not close")
+    }
+
+    "handle exceptions in the block and closing" in new UsingFixture {
+      val caught = intercept[Exception] {
+        using(new UncloseableUseable) { c =>
+          throw new Exception("will not run")
+        }
+      }
+      (caught should have).message("will not run")
+      (caught.getSuppressed.head should have).message("will not close")
+    }
 
     "ignore null Closeables" in new UsingFixture {
       val closable: UsingClosable = null // scalastyle:ignore null
@@ -378,6 +397,12 @@ class OsloSpec extends WordSpec with Matchers with PropertyChecks {
   }
 
   trait UsingFixture {
+
+    class UncloseableUseable {
+      def close(): Unit = {
+        throw new Exception("will not close")
+      }
+    }
 
     class BadUseable(private val msg: String) {
       def close(): Unit = ()
