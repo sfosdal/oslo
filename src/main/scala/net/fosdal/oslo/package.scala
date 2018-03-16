@@ -21,10 +21,20 @@ package object oslo extends Oslo {
 
   implicit def ShutdownCloser[A <: { def shutdown(): Unit }](a: A): Unit = if (null != a) a.shutdown() // scalastyle:ignore null
 
-  def using[A, B](resource: A)(f: A => B)(implicit closer: A => Unit): B = {
-    Try(f(resource)).tap(_ => closer(resource)) match {
-      case Success(b) => b
-      case Failure(e) => throw e
+  def using[A, B](resource: => A)(f: A => B)(implicit closer: A => Unit): B = {
+    Try {
+      f(resource)
+    } match {
+      case Success(b) =>
+        Try(closer(resource))  match {
+          case Success(_) => b
+          case Failure(e) => throw e
+        }
+      case Failure(e1) =>
+        Try(closer(resource)) match {
+          case Success(_)  => throw e1
+          case Failure(e2) => throw e1.tap(_.addSuppressed(e2))
+        }
     }
   }
 

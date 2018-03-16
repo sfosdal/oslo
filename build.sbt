@@ -10,6 +10,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.scala-logging" %% "scala-logging" % "3.8.0",
   "joda-time"                  % "joda-time"      % "2.9.9",
   "org.scalacheck"             %% "scalacheck"    % "1.13.5" % Test,
+  "org.scalamock"              %% "scalamock"     % "4.1.0" % Test,
   "org.scalatest"              %% "scalatest"     % "3.0.5" % Test
 )
 
