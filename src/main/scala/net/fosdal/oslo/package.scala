@@ -6,7 +6,7 @@ import net.fosdal.oslo.oduration._
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 import scala.language.{implicitConversions, reflectiveCalls}
-import scala.util.{Failure, Success, Try}
+import scala.util.control.NonFatal
 
 // scalastyle:off structural.type
 package object oslo extends Oslo {
@@ -21,18 +21,35 @@ package object oslo extends Oslo {
 
   implicit def ShutdownCloser[A <: { def shutdown(): Unit }](a: A): Unit = if (null != a) a.shutdown() // scalastyle:ignore null
 
-  def using[A, B](resource: A)(f: A => B)(implicit closer: A => Unit): B = {
-    Try(f(resource)).tap(_ => closer(resource)) match {
-      case Success(b) => b
-      case Failure(e) => throw e
+  def using[A, B](resource: => A)(f: A => B)(implicit closer: A => Unit): B = {
+    var exception = Option.empty[Throwable]
+    var r         = Option.empty[A]
+    try {
+      r = Some(resource)
+      f(r.get)
+    } catch {
+      case NonFatal(e) =>
+        exception = Some(e)
+        throw e
+    } finally {
+      exception match {
+        case Some(e) =>
+          try {
+            closer(r.get)
+          } catch {
+            case NonFatal(suppressed) =>
+              e.addSuppressed(suppressed)
+          }
+        case None => closer(r.get)
+      }
     }
   }
 
   def time[A](block: => A)(f: (A, FiniteDuration) => Unit): A = {
     val start = System.nanoTime()
-    val a     = block
-    f(a, (System.nanoTime() - start).nanos)
-    a
+    val b     = block
+    f(b, (System.nanoTime() - start).nanos)
+    b
   }
 
   def logStatus[A](logger: String => Unit)(block: => A): A = {
