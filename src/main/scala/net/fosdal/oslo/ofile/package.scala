@@ -23,7 +23,7 @@ package object ofile {
     * @param filePath the path to the file. see [[java.io.File]] for additional details
     * @return
     */
-  def fileContents(filePath: String): String = Source.fromFile(filePath).mkString
+  def fileContents(filePath: String): String = using(Source.fromFile(filePath))(_.mkString)
 
   /**
     * Uses getResourceAsStream to read the resource and return its contents.
