@@ -1,5 +1,7 @@
 package net.fosdal.oslo
 
+import scala.util.matching.Regex
+
 import net.fosdal.oslo.onumber._
 
 package object ostring {
@@ -10,6 +12,19 @@ package object ostring {
 
   private[this] val BytePattern = s"([0-9.]+?)\\s*([${ByteUnits.tail.reverse.map(_.head).mkString}]?b)".r
   private[this] val ByteFactors = ByteUnits.zipWithIndex.toMap.mapValues(BytesPerKilobyte.pow)
+
+  private val separators: Regex = Seq("\\s+", "_", "-", "(?<=[A-Z])(?=[A-Z][a-z])", "(?<=[^A-Z_-])(?=[A-Z])", "(?<=[A-Za-z])(?=[^A-Za-z])").mkString("|").r
+  private val separate:   String => Seq[String] = separators.split(_).filter(_.nonEmpty)
+  private val titleCase:  String => String = _.toLowerCase.capitalize
+  private val lowerCase:  String => String = _.toLowerCase
+  private val upperCase:  String => String = _.toUpperCase
+
+  private def convertCase(headTransform: String => String, tailTransform: String => String, sep: String, str: String): String = {
+    (separate(str) match {
+      case head +: tail => headTransform(head) +: tail.map(tailTransform)
+      case list         => list
+    }).mkString(sep)
+  }
 
   implicit class StringOps(private val s: String) extends AnyVal {
 
@@ -93,6 +108,18 @@ package object ostring {
           math.round(s.toDouble)
       }
     }
+
+    def toLowerCamel: String = convertCase(lowerCase, titleCase, "", s)
+
+    def toUpperCamel: String = convertCase(titleCase, titleCase, "", s)
+
+    def toLowerSnake: String = convertCase(lowerCase, lowerCase, "_", s)
+
+    def toUpperSnake: String = convertCase(upperCase, upperCase, "_", s)
+
+    def toLowerKebab: String = convertCase(lowerCase, lowerCase, "-", s)
+
+    def toUpperKebab: String = convertCase(upperCase, upperCase, "-", s)
 
   }
 
